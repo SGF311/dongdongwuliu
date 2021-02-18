@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.w3.org/1999/xhtml">
+
+
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>运营商后台管理系统</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+
+    <!--公共js css-->
+    <script src="/common/commonCss.js"></script>
+    <script src="/common/commonJs.js"></script>
+
+    <style>
+        .tab-pane {
+            height: 100%;
+        }
+        .tab-pane >.iframeClass{
+            height: 100% !important;
+        }
+    </style>
+</head>
+
+<body >
+<shiro:user>
+
+    您好，<span>[[${user.uname}]]</span>
+    <a onclick="logout()" target="_blank">退出</a>
+</shiro:user>
+<div class="container-fluid" style="height:100vh;">
+    <div class="row" style="height: 100%;">
+        <div class="col-lg-3" style="height: 100%;padding-top: 10px">
+            <div id="tree"></div>
+        </div>
+        <div class="col-lg-9" style="height: 100%;padding-top: 10px">
+            <!--导航栏-->
+            <ul class="nav nav-tabs" id="myTab" style="height: 42px;"></ul>
+            <!--内容-->
+            <div class="tab-content" style="height: 92%"></div>
+        </div>
+    </div>
+</div>
+</body>
+<script th:inline="javascript">
+    var key = [[${key}]];
+    var user = [[${user}]];
+    /*将token进行持久化*/
+    localStorage.setItem("token",key);
+    /*将当前登录用户持久化到本地*/
+    localStorage.setItem("user",JSON.stringify(user));
+    // localStorage.removeItem("key") //需要删除的key
+    // localStorage.getItem("key")//根据key获取数据
+    console.log(key);
+    //获取当前登录的用户
+    $('#tree').treeview({
+        data: getdata(),
+        collapseIcon: "glyphicon glyphicon-folder-open",
+        expandIcon: "glyphicon glyphicon-folder-close",
+        onNodeSelected: function (event, data) {
+            if (!data.nodes) {
+                console.log(data)
+                $.addtabs.add({
+                    title: data.text,
+                    url: "/" + data.url,
+                    id: data.id
+                })
+            }
+        }
+    })
+
+    function getdata() {
+        var tree = [];
+        $.ajax({
+            url: "/menu/getMenu",
+            data: {key},
+            dataType: "json",
+            type: "get",
+            async: false,
+            success: function (result) {
+                tree = result;
+            },
+            error: function (result) {
+                toastr.error("网络错误")
+            }
+        })
+        return tree;
+    }
+
+
+    function logout() {
+        localStorage.removeItem("token") //需要删除的key
+        localStorage.removeItem("user") //需要删除的key
+        location.href = "/logout/"+key;
+    }
+</script>
+
+</html>

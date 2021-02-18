@@ -1,0 +1,13 @@
+server:
+  port: 8160 #为了和之前的区分，我们阿里巴巴的都是用9000段端口
+spring:
+  application:
+    name: dongdongwuliu-es-service #设置微服务名称
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8844
+      config:
+        server-addr: 127.0.0.1:8844 #Nacos作为配置中心地址
+        file-extension: yml #指定yml格式配置
+        group: DEV-GROUP #组

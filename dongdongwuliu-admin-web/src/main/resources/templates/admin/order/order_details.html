@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--公共js css-->
+    <script src="/common/commonCss.js"></script>
+    <script src="/common/commonJs.js"></script>
+</head>
+<body>
+    <form>
+        <input type="hidden" name="orderId" th:value="${tbOrder.orderId}">
+        收发货信息:<br>
+        寄件人姓名:<input type="text" disabled="disabled" th:value="${tbOrder.sender}" placeholder="请输入寄件人姓名" id="sender" name="sender"><br>
+        联系电话:<input type="text" disabled="disabled" th:value="${tbOrder.senderMobile}" placeholder="请输入寄件人联系人电话" id="senderMobile" name="senderMobile"><br>
+        寄件人邮编:<input type="text" disabled="disabled" th:value="${tbOrder.senderZipCode}" placeholder="请输入寄件人邮编" id="senderZipCode" name="senderZipCode"><br>
+        寄件地址:
+        <input type="text" placeholder="寄件人地址" th:value="${tbOrder.senderAreaName}" disabled="disabled" name="senderAreaName"><br>
+        <input type="text" placeholder="详细街道" disabled="disabled" th:value="${tbOrder.senderDetailedAddress}" name="senderDetailedAddress"><br>
+        <br><br>
+
+        收件人姓名:<input type="text" disabled="disabled" th:value="${tbOrder.receiver}" placeholder="请输入收件人姓名" id="receiver" name="receiver"><br>
+        联系电话:<input type="text" disabled="disabled" th:value="${tbOrder.receiverMobile}" placeholder="请输入收件人联系电话" id="receiverMobile" name="receiverMobile"><br>
+        收件人邮编:<input type="text" disabled="disabled" th:value="${tbOrder.receiverZipCode}" placeholder="请输入收件人邮编" id="receiverZipCode" name="receiverZipCode"><br>
+        收件地址:
+        <input type="text" placeholder="收件人地址" disabled="disabled" th:value="${tbOrder.receiverAreaName}" name="receiverAreaName"><br>
+        <input type="text" placeholder="详细街道" disabled="disabled" name="receiverDetailedAddress" th:value="${tbOrder.receiverDetailedAddress}"><br>
+        <br><br>
+
+        货物类型：
+        <div class="form-group area">
+            <select class="form-control" name="cargoId" id="cargoId" disabled="disabled">
+                <option>请选择</option>
+                <option th:value="1" th:selected="${tbOrder.cargoId == 1}">文件</option>
+                <option th:value="2" th:selected="${tbOrder.cargoId == 2}">日用品</option>
+                <option th:value="3" th:selected="${tbOrder.cargoId == 3}">家具</option>
+                <option th:value="4" th:selected="${tbOrder.cargoId == 4}">家电</option>
+                <option th:value="5" th:selected="${tbOrder.cargoId == 5}">数码</option>
+                <option th:value="6" th:selected="${tbOrder.cargoId == 6}">食品</option>
+                <option th:value="7" th:selected="${tbOrder.cargoId == 7}">配件</option>
+                <option th:value="8" th:selected="${tbOrder.cargoId == 8}">服装</option>
+            </select>
+        </div><br>
+        重量(kg):<input type="text" name="cargoWeight" disabled="disabled" placeholder="货物重量应大于0" th:value="${tbOrder.cargoWeight}" id="cargoWeight"><br>
+        体积(m3):<input type="text" name="cargoVolume" disabled="disabled" th:value="${tbOrder.cargoVolume}" id="cargoVolume"><br>
+        <br><br>
+
+        服务信息:
+        <br>
+        货物保价：<input type="text" name="marginValue" disabled="disabled" id="marginValue" th:value="${tbOrder.marginValue}"><br>
+        货物类型：<input type="text" name="cargoName" disabled="disabled" id="cargoName" th:value="${tbOrder.cargoName}"><br>
+        站点：<input type="text" name="siteName" disabled="disabled" id="siteName" th:value="${tbOrder.siteName}"><br>
+    </form>
+</body>
+</html>

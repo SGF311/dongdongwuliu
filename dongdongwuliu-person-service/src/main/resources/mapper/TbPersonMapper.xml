@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dongdongwuliu.mapper.TbPersonMapper">
+    <resultMap id="BaseResultMap" type="com.dongdongwuliu.pojo.TbPerson">
+        <id column="uid" property="uid" jdbcType="INTEGER"/>
+        <result column="uname" property="uname" jdbcType="VARCHAR"/>
+        <result column="upwd" property="upwd" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="longitude" property="longitude" jdbcType="VARCHAR"/>
+        <result column="latitude" property="latitude" jdbcType="VARCHAR"/>
+        <result column="salt" property="salt" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="BIGINT"/>
+    </resultMap>
+    <insert id="insertReturnUid" useGeneratedKeys="true" keyColumn="uid" keyProperty="uid">
+        insert into tb_person (uname,upwd,`type`,longitude,latitude,salt,phone,sid) values (#{uname},#{upwd},#{type},#{longitude},#{latitude},#{salt},#{phone},#{sid})
+    </insert>
+
+</mapper>

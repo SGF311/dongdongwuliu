@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dongdongwuliu.mapper.TbOrderMapper" >
+
+  <select id="findOrderByOutTradeNoBySenderMobileByStatus" resultType="com.dongdongwuliu.domain.vo.TbOrderVO">
+    select o.*, od.*, ct.cargo_name cargoName, s.site_name siteName from tb_order o
+    left join tb_order_detail od on o.order_id = od.order_id
+    left join tb_cargo_type ct on ct.cargo_id = o.cargo_id
+    left join tb_site s on s.site_id = o.site_id
+    <where>
+      and o.is_delete != 1
+      <if test="outTradeNo != null">
+        and o.order_id = #{outTradeNo}
+      </if>
+      <if test="senderMobile != null and senderMobile != ''">
+        and o.sender_mobile = #{senderMobile}
+      </if>
+      <if test="status != -1 and status != null">
+        and o.status = #{status}
+      </if>
+    </where>
+  </select>
+
+</mapper>

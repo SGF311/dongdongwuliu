@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+    <title>东东商城，优质！优质！</title>
+    <link rel="icon" href="/assets/img/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="/css/webbase.css" />
+    <link rel="stylesheet" type="text/css" href="/css/pages-JD-index.css" />
+    <link rel="stylesheet" type="text/css" href="/css/widget-jquery.autocomplete.css" />
+    <link rel="stylesheet" type="text/css" href="/css/widget-cartPanelView.css" />
+    <script type="text/javascript" src="/js/plugins/jquery/jquery.min.js"></script>
+</head>
+<script th:inline="javascript">
+
+    var provincesList = [[${provincesList}]];
+
+    function city(provinceId){
+        $.ajax({
+            url:"/provincesController/getCity",
+            type:"get",
+            data:{provinceId:provinceId},
+            dataType:"json",
+            success:function(data){
+                var result = data.data;
+                var table = '';
+                table += '<option value="-1">请选择</option>';
+                for (let i = 0; i < result.length; i++) {
+                    table += '<option value="' + result[i].cityid + '">' + result[i].city + '</option>';
+                }
+                console.log(table);
+                $("#cityId").html(table);
+            },
+            error:function(data){
+                alert("有病")
+            }
+        })
+    }
+
+    function town(cityid){
+        $.ajax({
+            url:"/provincesController/getTown",
+            type:"get",
+            data:{cityid:cityid},
+            dataType:"json",
+            success:function(data){
+                var result = data.data;
+                var table = '';
+                table += '<option value="-1">请选择</option>';
+                for (let i = 0; i < result.length; i++) {
+                    table += '<option value="' + result[i].areaid + '">' + result[i].area + '</option>';
+                }
+                console.log(table);
+                $("#townId").html(table);
+            },
+            error:function(data){
+                alert("有病")
+            }
+        })
+    }
+
+    function city2(provinceId){
+        $.ajax({
+            url:"/provincesController/getCity",
+            type:"get",
+            data:{provinceId:provinceId},
+            dataType:"json",
+            success:function(data){
+                var result = data.data;
+                var table = '';
+                table += '<option value="-1">请选择</option>';
+                for (let i = 0; i < result.length; i++) {
+                    table += '<option value="' + result[i].cityid + '">' + result[i].city + '</option>';
+                }
+                console.log(table);
+                $("#cityId2").html(table);
+            },
+            error:function(data){
+                alert("有病")
+            }
+        })
+    }
+
+    function town2(cityid){
+        $.ajax({
+            url:"/provincesController/getTown",
+            type:"get",
+            data:{cityid:cityid},
+            dataType:"json",
+            success:function(data){
+                var result = data.data;
+                var table = '';
+                table += '<option value="-1">请选择</option>';
+                for (let i = 0; i < result.length; i++) {
+                    table += '<option value="' + result[i].areaid + '">' + result[i].area + '</option>';
+                }
+                console.log(table);
+                $("#townId2").html(table);
+            },
+            error:function(data){
+                alert("有病")
+            }
+        })
+    }
+
+    function addOrderInfo(){
+        var provinceId = document.getElementById("provinceId");
+        var index = provinceId.selectedIndex; // 选中索引
+        // var value = sel.options[index].value;//要的值
+        var text = provinceId.options[index].text;//要的文本
+
+        var cityId = document.getElementById("cityId");
+        var index1 = cityId.selectedIndex; // 选中索引
+        var text1 = cityId.options[index1].text;//要的文本
+
+        var townId = document.getElementById("townId");
+        var index2 = townId.selectedIndex; // 选中索引
+        var text2 = townId.options[index2].text;//要的文本
+
+        var senderAreaName = text + text1 + text2;
+        $("#senderAreaName").val(senderAreaName);
+
+        var provinceId2 = document.getElementById("provinceId2");
+        var index2 = provinceId2.selectedIndex; // 选中索引
+        // var value = sel.options[index].value;//要的值
+        var text2 = provinceId2.options[index2].text;//要的文本
+
+        var cityId2 = document.getElementById("cityId2");
+        var index12 = cityId2.selectedIndex; // 选中索引
+        var text12 = cityId2.options[index12].text;//要的文本
+
+        var townId2 = document.getElementById("townId2");
+        var index22 = townId2.selectedIndex; // 选中索引
+        var text22 = townId2.options[index22].text;//要的文本
+
+        var receiverAreaName = text2 + text12 + text22;
+        $("#receiverAreaName").val(receiverAreaName);
+
+        var cargoId = document.getElementById("cargoId");
+        var index3 = cargoId.selectedIndex; // 选中索引
+        var cargoName = cargoId.options[index3].text;//要的文本
+        $("#cargoName").val(cargoName);
+
+        var visitTime = $("#visitTime").val();
+        var str1 = visitTime.replace('T', ' ');
+        var dateTime = str1 + ":00";
+        console.log(dateTime);
+        $("#time").val(dateTime);
+
+        var username = $("#username").val();
+
+        console.log(receiverAreaName);
+        console.log(senderAreaName);
+        console.log("增加"+username);
+        $.ajax({
+            url:"/orderController/addOrderInfo",
+            type:"get",
+            data:$("#addForm").serialize(),
+            dataType:"json",
+            success:function(data){
+                alert("成功")
+            },
+            error:function(data){
+                alert("失败")
+            }
+        })
+    }
+
+    //查看站点信息
+    function selectSite(){
+        var visitTime = $("#visitTime").val();
+        console.log(visitTime.length);
+        // var str1 = visitTime.replace('T', ' ');
+        // var dateTime = str1 + ":00";
+        // console.log(dateTime);
+        //判断有无上门取件时间   如果有
+        if (visitTime.length != 0){
+            //根据用户选择的寄件人地址信息查询站点
+            var townId = $("#townId option:selected").val();   //区
+            var cityId = $("#cityId option:selected").val();   //市
+            console.log(townId);
+            console.log(cityId);
+            //判断用户是否选择了地区，选择了
+            if (townId != -1){
+                //根据地区查询站点
+                $.ajax({
+                    url:"/orderController/getTownBySite",
+                    type:"get",
+                    data:{aid:townId},
+                    dataType:"json",
+                    success:function(data){
+                        console.log(data);
+                        var table = "";
+                        table += "选择站点：<select name='siteId' id='siteId'>";
+                        table += "<option value='-1'>请选择</option>";
+                        //查询出来展示站点
+                        if (data.length != 0){
+                            for (let i = 0; i < data.length; i++) {
+                                table += "<option value='" + data[i].siteId + "'>" + data[i].siteName + "</option>";
+                            }
+                        }else{//没查询出来 就根据市查询站点
+                            //判断是否选择了市 , 选择了
+                            if (cityId != -1){
+                                //根据市查询站点
+                                getCityBySite(cityId);
+                            }else{//没选择  提示用户选择
+                                alert("您还没有选择市");
+                            }
+                        }
+                        table += "<select>";
+                        $("#site").html(table);
+                    },
+                    error:function(data){
+                        alert("有病")
+                    }
+                })
+            }else{//没选择地区 就根据市查询站点
+                //判断是否选择了市 , 选择了
+                if (cityId != -1){
+                    //根据市查询站点
+                    getCityBySite(cityId);
+                }else{//没选择  提示用户选择
+                    alert("您还没有选择市");
+                }
+            }
+        }
+    }
+
+    function getCityBySite(cityId){
+        $.ajax({
+            url:"/orderController/getCityBySite",
+            type:"get",
+            data:{cid:cityId},
+            dataType:"json",
+            success:function(data){
+                var table = "";
+                table += "选择站点：<select name='siteId' id='siteId'>";
+                table += '<option value="-1">请选择</option>';
+                for (let i = 0; i < data.length; i++) {
+                    table += "<option value='" + data[i].siteId + "'>" + data[i].siteName + "</option>";
+                }
+                table += "<select>";
+                $("#site").html(table);
+            },
+            error:function(data){
+                alert("有病")
+            }
+        })
+    }
+
+    //根据货物的体重距离等等计算价格
+    function selectPrice(){
+
+        var provinceId = document.getElementById("provinceId");
+        var index = provinceId.selectedIndex; // 选中索引
+        // var value = sel.options[index].value;//要的值
+        var text = provinceId.options[index].text;//要的文本
+
+        var cityId = document.getElementById("cityId");
+        var index1 = cityId.selectedIndex; // 选中索引
+        var text1 = cityId.options[index1].text;//要的文本
+
+        var townId = document.getElementById("townId");
+        var index2 = townId.selectedIndex; // 选中索引
+        var text2 = townId.options[index2].text;//要的文本
+
+        var senderAreaName = text + text1 + text2;
+        $("#senderAreaName").val(senderAreaName);
+
+        //获取用户填入的货物重量
+        var cargoWeight = $("#cargoWeight").val();
+        //获取用户填入的货物体积
+        var cargoVolume = $("#cargoVolume").val();
+        //获取用户选择的地址  计算经纬度
+        var address = $("#senderAreaName").val();
+
+        //首先计算配送费
+        //判断是否选择了取货时间  选择了
+        var visitTime = $("#visitTime").val();
+        if (visitTime.length != 0){
+            //有取件时间说明是上门取件  计算配送费
+            //获取站点信息，根据站点ID查询配送员经纬度，再将用户选择的寄件人地址信息解析成经纬度进行计算距离，在根据距离计算价格
+            var siteId = $("#siteId option:selected").val();
+            //判断用户是否选择了站点  选择了
+            if (siteId != -1){
+                //根据站点ID查询配送员经纬度
+                $.ajax({
+                    url:"/person/selectByType/" + 1 + "/" + siteId,
+                    type:"get",
+                    data:{},
+                    dataType:"json",
+                    success:function(result){
+                        var data = result.data.data[0];
+                        console.log("配送员信息：------"+data);
+                        //根据配送员经纬度 和 用户选择的寄件人地址经纬度计算距离
+                         var longitude = data.longitude; //配送员径度
+                         var latitude = data.latitude;   //配送员纬度
+                        $("#personId").val(data.uid);
+                        $.ajax({
+                            url:"http://restapi.amap.com/v3/geocode/geo?address="+address+"&output=JSON&key=255053ebe2cc144cc9b0f27adbdd24e1",
+                            type:"get",
+                            data:{},
+                            dataType:"json",
+                            success:function(data){
+                                var result = data.geocodes;//获取德邦生成的经纬度
+                                var location = result[0].location;
+                                console.log(location);
+                                //将获取的经纬度截取成  经度  纬度
+                                var split = location.split(",");
+                                console.log("用户选择的地址经纬度 ------"+split);
+                                var longitude2 = split[0];
+                                var latitude2 = split[1];
+                                console.log(longitude+"---"+latitude+"---"+longitude2+"---"+latitude2);
+                                //根据经纬度计算距离   根据距离计算价格
+                                var distance = GetDistance(longitude,latitude,longitude2,latitude2);
+                                var juli = Math.ceil(distance);//向上取整
+                                console.log("距离 ---" + juli);
+                                $("#distance").val(juli);
+                                //根据计算出的寄件地址距离 与 站点 查询配送价格
+                                $.ajax({
+                                    url:"/orderController/selectCourierPriceBySiteId",
+                                    type:"get",
+                                    data:{siteScope:juli,siteId:siteId},
+                                    dataType:"json",
+                                    success:function(datas){
+                                        var weightPrice = datas.weightPrice;
+                                        //计算货物重量价格
+                                        var wp = weightPrice * cargoWeight;
+                                        console.log("重量价格>>>>"+wp);
+                                        var volumePrice = datas.volumePrice;
+                                        //计算货物体积价格
+                                        var cp = volumePrice * cargoVolume;
+                                        console.log("体积价格>>>>"+cp);
+                                        //取体积价格与重量价格两者之间的较大值
+                                        //eval()函数用于在不引用任何特定对象的情况下计算代码字符串。
+                                        if(eval(wp) > eval(cp)){//重量价格大
+                                            $("#courierPrice").html("<span>配送价格：<input type='text' readonly='readonly' name='deliveryCost' id='cp' value='" + wp + "'></span>");
+                                        }else{//体积价格大
+                                            $("#courierPrice").html("<span>配送价格：<input type='text' readonly='readonly' name='deliveryCost' id='cp' value='" + cp + "'></span>");
+                                        }
+                                    },
+                                    error:function(data){
+                                        alert("有病")
+                                    }
+                                })
+                            },
+                            error:function(data){
+                                alert("有病")
+                            }
+                        })
+                    },
+                    error:function(data){
+                        alert("有病")
+                    }
+                })
+                //然后在进行计算运输价格
+                // 查询线路价格  根据寄件人省编号 和 收件人省编号查询线路    再根据线路id    查询线路寄价价格
+                // 线路分为普通线路和专线
+                //获取寄件人省编号
+                var provinceId = $("#provinceId option:selected").val();
+                //获取收货人省编号
+                var provinceId2 = $("#provinceId2 option:selected").val();
+                $.ajax({
+                    url:"/orderController/selectStartpidByInfo/" + provinceId + "/" + provinceId2,
+                    type:"get",
+                    data:{},
+                    dataType:"json",
+                    success:function(data){
+                        //获取线路id   根据线路id查询线路价格
+                        var pathId = data.id;
+                        $("#circuitId").val(pathId);
+                        var ji = "";
+                        var shou = "";
+                        for (let i = 0; i < provincesList.length; i++) {
+                            if (provincesList[i].provinceid == provinceId){
+                                ji += provincesList[i].province;
+                            }
+                            if (provincesList[i].provinceid == provinceId2){
+                                shou += provincesList[i].province;
+                            }
+                        }
+                        console.log("寄"+ji);
+                        console.log("收"+shou);
+                        $.ajax({
+                            url:"/orderController/getCarriagePriceByPathId/" + pathId,
+                            type:"get",
+                            data:{},
+                            dataType:"json",
+                            success:function(data){
+                                //首重
+                                var firstKg = data.firstKg;
+                                //首重价格
+                                var firstKgPrice = data.firstKgPrice;
+                                //首立方
+                                var firstStere = data.firstStere;
+                                //首立方价格
+                                var firstSterePrice = data.firstSterePrice;
+
+                                //计算获取到重量价格
+                                var wk = cargoWeight * firstKgPrice / firstKg;
+                                //计算获取到体积价格
+                                var vs = cargoVolume * firstSterePrice / firstStere;
+                                //取体积价格与重量价格两者之间的较大值
+                                if(eval(wk) > eval(vs)){//重量价格大
+                                    //根据用户选择的寄件人省编号 和 收件人省编号计算距离   根据距离计算价格
+                                    julijisuan(ji,shou,wk);
+
+                                }else{//体积价格大
+                                    julijisuan(ji,shou,vs);
+                                }
+                            },
+                            error:function(data){
+                                alert("有病")
+                            }
+                        })
+                    },
+                    error:function(data){
+                        alert("有病")
+                    }
+                })
+            }else{//没选择提示用户选择站点
+                alert("还没有选择站点");
+            }
+        }else{//没有选择取货时间说明是到站点寄件，只计算运输费
+            var provinceId = $("#provinceId option:selected").val();
+            //获取收货人省编号
+            var provinceId2 = $("#provinceId2 option:selected").val();
+            $.ajax({
+                url:"/orderController/selectStartpidByInfo/" + provinceId + "/" + provinceId2,
+                type:"get",
+                data:{},
+                dataType:"json",
+                success:function(data){
+                    //获取线路id   根据线路id查询线路价格
+                    var pathId = data.id;
+                    var ji = "";
+                    var shou = "";
+                    for (let i = 0; i < provincesList.length; i++) {
+                        if (provincesList[i].provinceid == provinceId){
+                            ji += provincesList[i].province;
+                        }
+                        if (provincesList[i].provinceid == provinceId2){
+                            shou += provincesList[i].province;
+                        }
+                    }
+                    console.log("寄"+ji);
+                    console.log("收"+shou);
+                    $.ajax({
+                        url:"/orderController/getCarriagePriceByPathId/" + pathId,
+                        type:"get",
+                        data:{},
+                        dataType:"json",
+                        success:function(data){
+                            //首重
+                            var firstKg = data.firstKg;
+                            //首重价格
+                            var firstKgPrice = data.firstKgPrice;
+                            //首立方
+                            var firstStere = data.firstStere;
+                            //首立方价格
+                            var firstSterePrice = data.firstSterePrice;
+
+                            //计算获取到重量价格
+                            var wk = cargoWeight * firstKgPrice / firstKg;
+                            //计算获取到体积价格
+                            var vs = cargoVolume * firstSterePrice / firstStere;
+                            //取体积价格与重量价格两者之间的较大值
+                            if(eval(wk) > eval(vs)){//重量价格大
+                                //根据用户选择的寄件人省编号 和 收件人省编号计算距离   根据距离计算价格
+                                julijisuan(ji,shou,wk);
+                            }else{//体积价格大
+                                julijisuan(ji,shou,vs);
+                            }
+                        },
+                        error:function(data){
+                            alert("有病")
+                        }
+                    })
+                },
+                error:function(data){
+                    alert("有病")
+                }
+            })
+        }
+
+    }
+
+    //根据收件人地址编号  寄件人省编号 计算经纬度
+    function julijisuan(ji,shou,price){
+        $.ajax({
+            url:"http://restapi.amap.com/v3/geocode/geo?address="+ji+"&output=JSON&key=255053ebe2cc144cc9b0f27adbdd24e1",
+            type:"get",
+            data:{},
+            dataType:"json",
+            success:function(data){
+                var result = data.geocodes;//获取德邦生成的经纬度
+                var location = result[0].location;
+                console.log(location);
+                //将获取的经纬度截取成  经度  纬度
+                var split = location.split(",");
+                console.log("用户选择的寄件人省经纬度 ------"+split);
+                var longi = split[0];
+                var lati = split[1];
+                $.ajax({
+                    url:"http://restapi.amap.com/v3/geocode/geo?address="+shou+"&output=JSON&key=255053ebe2cc144cc9b0f27adbdd24e1",
+                    type:"get",
+                    data:{},
+                    dataType:"json",
+                    success:function(data){
+                        var result = data.geocodes;//获取德邦生成的经纬度
+                        var location = result[0].location;
+                        console.log(location);
+                        //将获取的经纬度截取成  经度  纬度
+                        var split = location.split(",");
+                        console.log("用户选择的收件人省经纬度 ------"+split);
+                        var longi2 = split[0];
+                        var lati2 = split[1];
+                        //根据经纬度计算距离   根据距离计算价格
+                        var distance = GetDistance(longi,lati,longi2,lati2);
+                        var juli = Math.ceil(distance);//向上取整
+                        console.log("距离 ---" + juli);
+                        //这里的距离计算价格暂时定死
+                        var jiage = juli * 2;
+                        var count = price + jiage;
+                        $("#price").html("<span>运输价格：<input type='text' readonly='readonly' name='trafficExpense' id='counts' value='" + count + "'></span>");
+                        //计算总价
+                        var cp = $("#cp").val();
+                        if (cp == null){
+                            $("#estimatedPrice").val(count);
+                            $("#amountPayable").val(count);
+                            selectSeckill(count);
+                            $("#countPrice").html("<span>总价格：<input type='text' readonly='readonly' id='counpri' value='" + count + "'></span>");
+                        }else{
+                            var ccc = parseInt(count)+parseInt(cp);
+                            $("#estimatedPrice").val(ccc);
+                            $("#amountPayable").val(ccc);
+                            selectSeckill(ccc);
+                            $("#countPrice").html("<span>总价格：<input type='text' readonly='readonly' id='counpri' value='" + ccc + "'></span>");
+                        }
+                    },
+                    error:function(data){
+                        alert("有病")
+                    }
+                })
+            },
+            error:function(data){
+                alert("有病")
+            }
+        })
+
+    }
+
+    //查询优惠券
+    function selectSeckill(sumPrice){
+        //价格计算完后进行用户的优惠券查询，
+        //获取用户id
+        var userId = $("#userId").val();
+        $.ajax({
+            url:"/orderController/selectSeckillByUserIdBySumPrice/" + userId + "/" + sumPrice,
+            type:"post",
+            data:{},
+            dataType:"json",
+            success:function(result){
+                var table = '';
+                table += '<option value="-1">请选择</option>';
+                for (let i = 0; i < result.length; i++) {
+                    table += '<option value="' + result[i].losePrice + '">' + result[i].losePrice + '</option>';
+                }
+                $("#seckill").html(table);
+            },
+            error:function(data2){
+                alert("失败")
+            }
+        })
+    }
+
+    //扣减价格
+    function seckillPrice(losePrice){
+        var countPrice = $("#amountPayable").val();
+        var cp = countPrice - losePrice;
+        $("#estimatedPrice").val(cp);
+        $("#amountPayable").val(cp);
+        $("#countPrice").html("<span>总价格：<input type='text' readonly='readonly' id='counpri' value='" + cp + "'></span>");
+    }
+</script>
+
+<script>
+    function calculationAddress(address){
+        $.ajax({
+            url:"http://restapi.amap.com/v3/geocode/geo?address="+address+"&output=JSON&key=255053ebe2cc144cc9b0f27adbdd24e1",
+            type:"get",
+            data:{},
+            dataType:"json",
+            success:function(data){
+                var result = data.geocodes;//获取德邦生成的经纬度
+                console.log(result[0].location);
+            },
+            error:function(data){
+                alert("有病")
+            }
+        })
+    }
+
+    //进行经纬度转换为距离的计算
+    function Rad(d){
+        return d * Math.PI / 180.0;//经纬度转换成三角函数中度分表形式。
+    }
+    //计算距离，参数分别为第一点的纬度，经度；第二点的纬度，经度
+    function GetDistance(lat1,lng1,lat2,lng2){
+        var radLat1 = Rad(lat1);
+        var radLat2 = Rad(lat2);
+        var a = radLat1 - radLat2;
+        var  b = Rad(lng1) - Rad(lng2);
+        var s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a/2),2) +
+            Math.cos(radLat1)*Math.cos(radLat2)*Math.pow(Math.sin(b/2),2)));
+        s = s * 6378.137 ;// EARTH_RADIUS;
+        s = Math.round(s * 10000) / 10000; //输出为公里
+        //s=s.toFixed(4);
+        return s;
+    }
+
+</script>
+<body>
+<!-- 头部栏位 -->
+<!--页面顶部-->
+<div id="nav-bottom">
+    <!--顶部-->
+    <div class="nav-top">
+        <div class="top">
+            <div class="py-container">
+                <div class="shortcut">
+                    <ul class="fl">
+                        <li class="f-item">东东物流欢迎您！</li>
+                        <li class="f-item">请<a href="/tologin" target="_blank">登录</a>　<span><a href="register.html" target="_blank">免费注册</a></span></li>
+                    </ul>
+                    <ul >
+                        <li class="f-item">城市：北京</li>
+                        <li class="f-item">天气：晴天</li>
+                        <li class="f-item">温度：-3</li>
+                        <li class="f-item">风向：西北风，等级：3级大风</li>
+                        <li class="f-item">湿度：20</li>
+                    </ul>
+                    <ul class="fr">
+                        <li class="f-item"><a href="/toCreateOrder" >寄件</a></li>
+                        <li class="f-item space"></li>
+                        <li class="f-item"><a href="/toSearch" target="_blank">追踪与管理</a></li>
+                        <li class="f-item space"></li>
+                        <li class="f-item"><a href="/toUser">个人中心</a></li>
+                        <li class="f-item space"></li>
+                        <li class="f-item"><a href="/toMyOrder">我的订单</a></li>
+                        <li class="f-item space"></li>
+                        <li class="f-item"><a href="/toHomeSettingAddress">联系人管理</a></li>
+                        <li class="f-item space"></li>
+                        <li class="f-item"><a href="/toOverview" >关于东东物流</a></li>
+                        <li class="f-item space"></li>
+                        <li class="f-item" id="service">
+                            <span>客户服务</span>
+                            <ul class="service">
+                                <li><a href="cooperation.html" target="_blank">合作招商</a></li>
+                                <li><a href="shoplogin.html" target="_blank">商家后台</a></li>
+                                <li><a href="cooperation.html" target="_blank">合作招商</a></li>
+                                <li><a href="#">商家后台</a></li>
+                            </ul>
+                        </li>
+                        <li class="f-item space"></li>
+                        <li class="f-item">网站导航</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!--头部-->
+        <div class="header">
+            <div class="py-container">
+                <div class="yui3-g Logo">
+                    <div class="yui3-u Left logoArea" style="display: flex;align-items: center;justify-content: center">
+                        <h2 >东东物流</h2>
+                    </div>
+                    <div class="yui3-u Center searchArea">
+                        <div class="search">
+                            <form action="" class="sui-form form-inline">
+                                <!--searchAutoComplete-->
+                                <div class="input-append">
+
+                                    <input  id="autocomplete" type="text" class="input-error input-xxlarge" placeholder="货物追踪，请输入订单号或者手机号"/>
+                                    <button class="sui-btn btn-xlarge btn-danger" type="button" onclick="search()">搜索</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="yui3-g NavList" >
+                    <div class="yui3-u Left all-sort" style="background: white!important;">
+                    </div>
+                    <div class="yui3-u Center navArea">
+                        <ul class="nav">
+                            <li class="f-item"><a href="/" >首页</a></li>
+                            <li class="f-item"><a href="/toCreateOrder" >在线下单</a></li>
+                            <li class="f-item"><a href="/toPrice" >价格时效查询</a></li>
+                            <li class="f-item"><a href="/toSite" >网点查询</a></li>
+                            <li class="f-item"><a href="/toSeckillIndex" target="_blank">秒杀优惠券</a></li>
+                        </ul>
+                    </div>
+                    <div class="yui3-u Right"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--列表-->
+<div style="width: 1200px;margin: 0 auto">
+    <form id="addForm">
+<!--        <input type="text" name="address" id="address"><br>-->
+<!--        <input type="button" onclick="calculationAddress()" value="经纬度生成"><br>-->
+<!--        <input type="button" onclick="GetDistance(116.407526,39.904030,118.763232,32.061707)" value="根据经纬度计算距离"><br>-->
+
+        <input type="hidden" name="cccc" id="cccc">
+        <input type="hidden" name="senderAreaName" id="senderAreaName">
+        <input type="hidden" name="receiverAreaName" id="receiverAreaName">
+        <input type="hidden" name="cargoName" id="cargoName">
+        <input type="hidden" name="estimatedPrice" id="estimatedPrice">
+        <input type="hidden" name="amountPayable" id="amountPayable">
+        <input type="hidden" name="personId" id="personId">
+        <input type="hidden" name="distance" id="distance">
+        <input type="hidden" name="circuitId" id="circuitId">
+        <input type="text" name="username" id="username">
+        <input type="text" name="userId" id="userId">
+        收发货信息:<br>
+        <br><br>
+        寄件人姓名:<input type="text" placeholder="请输入寄件人姓名" id="sender" name="sender"><br>
+        联系电话:<input type="text" placeholder="请输入寄件人联系人电话" id="senderMobile" name="senderMobile"><br>
+        寄件人邮编:<input type="text" placeholder="请输入寄件人邮编" id="senderZipCode" name="senderZipCode"><br>
+        寄件地址:
+        <div class="form-group area">
+            <select onchange="city(this.value)" class="form-control" name="provinceId" id="provinceId">
+                <option value="-1">请选择</option>
+                <option th:each="provinces : ${provincesList}"
+                        th:value="${provinces.provinceid}" th:text="${provinces.province}"></option>
+            </select>
+        </div>
+        <div class="form-group area">
+            <select onchange="town(this.value)" class="form-control" name="cityId" id="cityId">
+                <option value="-1">请选择</option>
+            </select>
+        </div>
+        <div class="form-group area">
+            <select class="form-control" name="townId" id="townId">
+                <option value="-1">请选择</option>
+            </select>
+        </div>
+        <input type="text" placeholder="详细街道" name="senderDetailedAddress"><br>
+        <br><br>
+
+        收件人姓名:<input type="text"  placeholder="请输入收件人姓名" id="receiver" name="receiver"><br>
+        联系电话:<input type="text"  placeholder="请输入收件人联系电话" id="receiverMobile" name="receiverMobile"><br>
+        收件人邮编:<input type="text"  placeholder="请输入收件人邮编" id="receiverZipCode" name="receiverZipCode"><br>
+        收件地址:
+        <div class="form-group area">
+            <select onchange="city2(this.value)" class="form-control" name="provinceId2" id="provinceId2">
+                <option>请选择</option>
+                <option th:each="provinces : ${provincesList}"
+                        th:value="${provinces.provinceid}" th:text="${provinces.province}"></option>
+            </select>
+        </div>
+        <div class="form-group area">
+            <select onchange="town2(this.value)" class="form-control" name="cityId2" id="cityId2">
+                <option>请选择</option>
+            </select>
+        </div>
+        <div class="form-group area">
+            <select class="form-control" name="townId2" id="townId2">
+                <option>请选择</option>
+            </select>
+        </div>
+        <input type="text" placeholder="详细街道" name="receiverDetailedAddress"><br>
+        <br><br>
+
+        货物类型：
+        <div class="form-group area">
+            <select class="form-control" name="cargoId" id="cargoId">
+                <option>请选择</option>
+                <!--                    <option th:each="cargoType : ${cargoTypeVOList}"-->
+                <!--                            th:value="${cargoType.cargoId}" th:text="${cargoType.cargoName}"></option>-->
+                <option value="1">文件</option>
+                <option value="2">日用品</option>
+                <option value="3">家具</option>
+                <option value="4">家电</option>
+                <option value="5">数码</option>
+                <option value="6">食品</option>
+                <option value="7">配件</option>
+                <option value="8">服装</option>
+            </select>
+        </div><br>
+        重量(kg):<input type="text" name="cargoWeight" placeholder="货物重量应大于0" id="cargoWeight"><br>
+        体积(m3):<input type="text" name="cargoVolume" id="cargoVolume"><br>
+        <br><br>
+
+        服务信息:
+        <br>
+        货物保价：<input type="text" name="marginValue" id="marginValue"><br>
+        上门取货时间：<input type="datetime-local" id="visitTime"><br><br><br>
+        <input type="hidden" name="visitTime" id="time">
+
+    </form>
+        <input type="button" onclick="selectSite()" value="查看站点"><br>
+        <input type="button" onclick="selectPrice()" value="计算价格"><br>
+        <div id="site">
+        </div><br><br>
+
+        <div id="courierPrice">
+        </div><br><br>
+
+        <div id="price">
+        </div><br><br>
+
+        <div id="countPrice">
+        </div><br><br>
+
+        <div id="">
+            <select onchange="seckillPrice(this.value)" class="form-control" name="seckill" id="seckill">
+                <option>暂无优惠券</option>
+            </select>
+        </div><br><br>
+
+    <input type="button" value="生成订单" onclick="addOrderInfo()">
+</div>
+<!--商标-->
+<div class="brand">
+    <div class="py-container">
+        <ul class="Brand-list blockgary">
+            <li class="Brand-item">
+                <img src="img/brand_21.png" />
+            </li>
+            <li class="Brand-item"><img src="img/brand_03.png" /></li>
+            <li class="Brand-item"><img src="img/brand_05.png" /></li>
+            <li class="Brand-item"><img src="img/brand_07.png" /></li>
+            <li class="Brand-item"><img src="img/brand_09.png" /></li>
+            <li class="Brand-item"><img src="img/brand_11.png" /></li>
+            <li class="Brand-item"><img src="img/brand_13.png" /></li>
+            <li class="Brand-item"><img src="img/brand_15.png" /></li>
+            <li class="Brand-item"><img src="img/brand_17.png" /></li>
+            <li class="Brand-item"><img src="img/brand_19.png" /></li>
+        </ul>
+    </div>
+</div>
+<!-- 底部栏位 -->
+<!--页面底部-->
+<div class="clearfix footer">
+    <div class="py-container">
+        <div class="footlink">
+            <div class="Mod-service">
+                <ul class="Mod-Service-list">
+                    <li class="grid-service-item intro  intro1">
+
+                        <i class="serivce-item fl"></i>
+                        <div class="service-text">
+                            <h4>正品保障</h4>
+                            <p>正品保障，提供发票</p>
+                        </div>
+
+                    </li>
+                    <li class="grid-service-item  intro intro2">
+
+                        <i class="serivce-item fl"></i>
+                        <div class="service-text">
+                            <h4>正品保障</h4>
+                            <p>正品保障，提供发票</p>
+                        </div>
+
+                    </li>
+                    <li class="grid-service-item intro  intro3">
+
+                        <i class="serivce-item fl"></i>
+                        <div class="service-text">
+                            <h4>正品保障</h4>
+                            <p>正品保障，提供发票</p>
+                        </div>
+
+                    </li>
+                    <li class="grid-service-item  intro intro4">
+
+                        <i class="serivce-item fl"></i>
+                        <div class="service-text">
+                            <h4>正品保障</h4>
+                            <p>正品保障，提供发票</p>
+                        </div>
+
+                    </li>
+                    <li class="grid-service-item intro intro5">
+
+                        <i class="serivce-item fl"></i>
+                        <div class="service-text">
+                            <h4>正品保障</h4>
+                            <p>正品保障，提供发票</p>
+                        </div>
+
+                    </li>
+                </ul>
+            </div>
+            <div class="clearfix Mod-list">
+                <div class="yui3-g">
+                    <div class="yui3-u-1-6">
+                        <h4>购物指南</h4>
+                        <ul class="unstyled">
+                            <li>购物流程</li>
+                            <li>会员介绍</li>
+                            <li>生活旅行/团购</li>
+                            <li>常见问题</li>
+                            <li>购物指南</li>
+                        </ul>
+
+                    </div>
+                    <div class="yui3-u-1-6">
+                        <h4>配送方式</h4>
+                        <ul class="unstyled">
+                            <li>上门自提</li>
+                            <li>211限时达</li>
+                            <li>配送服务查询</li>
+                            <li>配送费收取标准</li>
+                            <li>海外配送</li>
+                        </ul>
+                    </div>
+                    <div class="yui3-u-1-6">
+                        <h4>支付方式</h4>
+                        <ul class="unstyled">
+                            <li>货到付款</li>
+                            <li>在线支付</li>
+                            <li>分期付款</li>
+                            <li>邮局汇款</li>
+                            <li>公司转账</li>
+                        </ul>
+                    </div>
+                    <div class="yui3-u-1-6">
+                        <h4>售后服务</h4>
+                        <ul class="unstyled">
+                            <li>售后政策</li>
+                            <li>价格保护</li>
+                            <li>退款说明</li>
+                            <li>返修/退换货</li>
+                            <li>取消订单</li>
+                        </ul>
+                    </div>
+                    <div class="yui3-u-1-6">
+                        <h4>特色服务</h4>
+                        <ul class="unstyled">
+                            <li>夺宝岛</li>
+                            <li>DIY装机</li>
+                            <li>延保服务</li>
+                            <li>东东商城E卡</li>
+                            <li>东东商城通信</li>
+                        </ul>
+                    </div>
+                    <div class="yui3-u-1-6">
+                        <h4>帮助中心</h4>
+                        <img src="img/wx_cz.jpg">
+                    </div>
+                </div>
+            </div>
+            <div class="Mod-copyright">
+                <ul class="helpLink">
+                    <li>关于我们<span class="space"></span></li>
+                    <li>联系我们<span class="space"></span></li>
+                    <li>关于我们<span class="space"></span></li>
+                    <li>商家入驻<span class="space"></span></li>
+                    <li>营销中心<span class="space"></span></li>
+                    <li>友情链接<span class="space"></span></li>
+                    <li>关于我们<span class="space"></span></li>
+                    <li>营销中心<span class="space"></span></li>
+                    <li>友情链接<span class="space"></span></li>
+                    <li>关于我们</li>
+                </ul>
+                <p>地址：北京市昌平区沙阳路18号 邮编：100000 电话：400-0123-302</p>
+                <p>京ICP备08006666号京公网安备11010888888</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!--页面底部END-->
+<!-- 楼层位置 -->
+<div id="floor-index" class="floor-index">
+    <ul>
+        <li>
+            <a class="num" href="javascript:;" style="display: none;">1F</a>
+            <a class="word" href="javascript;;" style="display: block;">家用电器</a>
+        </li>
+        <li>
+            <a class="num" href="javascript:;" style="display: none;">2F</a>
+            <a class="word" href="javascript;;" style="display: block;">手机通讯</a>
+        </li>
+        <li>
+            <a class="num" href="javascript:;" style="display: none;">3F</a>
+            <a class="word" href="javascript;;" style="display: block;">电脑办公</a>
+        </li>
+        <li>
+            <a class="num" href="javascript:;" style="display: none;">4F</a>
+            <a class="word" href="javascript;;" style="display: block;">家居家具</a>
+        </li>
+        <li>
+            <a class="num" href="javascript:;" style="display: none;">5F</a>
+            <a class="word" href="javascript;;" style="display: block;">运动户外</a>
+        </li>
+    </ul>
+</div>
+<!--侧栏面板开始-->
+<div class="J-global-toolbar">
+    <div class="toolbar-wrap J-wrap">
+        <div class="toolbar">
+            <div class="toolbar-panels J-panel">
+
+                <!-- 购物车 -->
+                <div style="visibility: hidden;" class="J-content toolbar-panel tbar-panel-cart toolbar-animate-out">
+                    <h3 class="tbar-panel-header J-panel-header">
+                        <a href="" class="title"><i></i><em class="title">购物车</em></a>
+                        <span class="close-panel J-close" onclick="cartPanelView.tbar_panel_close('cart');" ></span>
+                    </h3>
+                    <div class="tbar-panel-main">
+                        <div class="tbar-panel-content J-panel-content">
+                            <div id="J-cart-tips" class="tbar-tipbox hide">
+                                <div class="tip-inner">
+                                    <span class="tip-text">还没有登录，登录后商品将被保存</span>
+                                    <a href="#none" class="tip-btn J-login">登录</a>
+                                </div>
+                            </div>
+                            <div id="J-cart-render">
+                                <!-- 列表 -->
+                                <div id="cart-list" class="tbar-cart-list">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 小计 -->
+                    <div id="cart-footer" class="tbar-panel-footer J-panel-footer">
+                        <div class="tbar-checkout">
+                            <div class="jtc-number"> <strong class="J-count" id="cart-number">0</strong>件商品 </div>
+                            <div class="jtc-sum"> 共计：<strong class="J-total" id="cart-sum">¥0</strong> </div>
+                            <a class="jtc-btn J-btn" href="#none" target="_blank">去购物车结算</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 我的关注 -->
+                <div style="visibility: hidden;" data-name="follow" class="J-content toolbar-panel tbar-panel-follow">
+                    <h3 class="tbar-panel-header J-panel-header">
+                        <a href="#" target="_blank" class="title"> <i></i> <em class="title">我的关注</em> </a>
+                        <span class="close-panel J-close" onclick="cartPanelView.tbar_panel_close('follow');"></span>
+                    </h3>
+                    <div class="tbar-panel-main">
+                        <div class="tbar-panel-content J-panel-content">
+                            <div class="tbar-tipbox2">
+                                <div class="tip-inner"> <i class="i-loading"></i> </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tbar-panel-footer J-panel-footer"></div>
+                </div>
+
+                <!-- 我的足迹 -->
+                <div style="visibility: hidden;" class="J-content toolbar-panel tbar-panel-history toolbar-animate-in">
+                    <h3 class="tbar-panel-header J-panel-header">
+                        <a href="#" target="_blank" class="title"> <i></i> <em class="title">我的足迹</em> </a>
+                        <span class="close-panel J-close" onclick="cartPanelView.tbar_panel_close('history');"></span>
+                    </h3>
+                    <div class="tbar-panel-main">
+                        <div class="tbar-panel-content J-panel-content">
+                            <div class="jt-history-wrap">
+                                <ul>
+                                    <!--<li class="jth-item">
+                                        <a href="#" class="img-wrap"> <img src=".portal/img/like_03.png" height="100" width="100" /> </a>
+                                        <a class="add-cart-button" href="#" target="_blank">加入购物车</a>
+                                        <a href="#" target="_blank" class="price">￥498.00</a>
+                                    </li>
+                                    <li class="jth-item">
+                                        <a href="#" class="img-wrap"> <img src="portal/img/like_02.png" height="100" width="100" /></a>
+                                        <a class="add-cart-button" href="#" target="_blank">加入购物车</a>
+                                        <a href="#" target="_blank" class="price">￥498.00</a>
+                                    </li>-->
+                                </ul>
+                                <a href="#" class="history-bottom-more" target="_blank">查看更多足迹商品 &gt;&gt;</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tbar-panel-footer J-panel-footer"></div>
+                </div>
+
+            </div>
+
+            <div class="toolbar-header"></div>
+
+            <!-- 侧栏按钮 -->
+            <div class="toolbar-tabs J-tab">
+                <div onclick="cartPanelView.tabItemClick('cart')" class="toolbar-tab tbar-tab-cart" data="购物车" tag="cart" >
+                    <i class="tab-ico"></i>
+                    <em class="tab-text"></em>
+                    <span class="tab-sub J-count " id="tab-sub-cart-count">0</span>
+                </div>
+                <div onclick="cartPanelView.tabItemClick('follow')" class="toolbar-tab tbar-tab-follow" data="我的关注" tag="follow" >
+                    <i class="tab-ico"></i>
+                    <em class="tab-text"></em>
+                    <span class="tab-sub J-count hide">0</span>
+                </div>
+                <div onclick="cartPanelView.tabItemClick('history')" class="toolbar-tab tbar-tab-history" data="我的足迹" tag="history" >
+                    <i class="tab-ico"></i>
+                    <em class="tab-text"></em>
+                    <span class="tab-sub J-count hide">0</span>
+                </div>
+            </div>
+
+            <div class="toolbar-footer">
+                <div class="toolbar-tab tbar-tab-top" > <a href="#"> <i class="tab-ico  "></i> <em class="footer-tab-text">顶部</em> </a> </div>
+                <div class="toolbar-tab tbar-tab-feedback" > <a href="#" target="_blank"> <i class="tab-ico"></i> <em class="footer-tab-text ">反馈</em> </a> </div>
+            </div>
+
+            <div class="toolbar-mini"></div>
+
+        </div>
+
+        <div id="J-toolbar-load-hook"></div>
+
+    </div>
+</div>
+<!--购物车单元格 模板-->
+<script type="text/template" id="tbar-cart-item-template">
+    <div class="tbar-cart-item" >
+        <div class="jtc-item-promo">
+            <em class="promo-tag promo-mz">满赠<i class="arrow"></i></em>
+            <div class="promo-text">已购满600元，您可领赠品</div>
+        </div>
+        <div class="jtc-item-goods">
+            <span class="p-img"><a href="#" target="_blank"><img src="{2}" alt="{1}" height="50" width="50" /></a></span>
+            <div class="p-name">
+                <a href="#">{1}</a>
+            </div>
+            <div class="p-price"><strong>¥{3}</strong>×{4} </div>
+            <a href="#none" class="p-del J-del">删除</a>
+        </div>
+    </div>
+</script>
+<!--侧栏面板结束-->
+<script type="text/javascript">
+    $(function(){
+        $("#service").hover(function(){
+            $(".service").show();
+        },function(){
+            $(".service").hide();
+        });
+        $("#shopcar").hover(function(){
+            $("#shopcarlist").show();
+        },function(){
+            $("#shopcarlist").hide();
+        });
+
+    })
+</script>
+<script type="text/javascript" src="/js/model/cartModel.js"></script>
+<script type="text/javascript" src="/js/czFunction.js"></script>
+<script type="text/javascript" src="/js/plugins/jquery.easing/jquery.easing.min.js"></script>
+<script type="text/javascript" src="/js/plugins/sui/sui.min.js"></script>
+<script type="text/javascript" src="/js/pages/index.js"></script>
+<script type="text/javascript" src="/js/widget/cartPanelView.js"></script>
+<script type="text/javascript" src="/js/widget/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="/js/widget/nav.js"></script>
+</body>
+<script>
+    var user = JSON.parse(localStorage.getItem("user"))
+    console.log("欢迎用户：" + user.username);
+    $("#username").val(user.username);
+    $("#userId").val(user.id);
+</script>
+
+</html>

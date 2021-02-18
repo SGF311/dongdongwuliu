@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--公共js css-->
+    <script src="/common/commonCss.js"></script>
+    <script src="/common/commonJs.js"></script>
+</head>
+<body>
+    <div id="toolbar">
+        <input type="button" value="增加" onclick="toAdd()">
+    </div>
+
+    <table id="table">
+        <h1 align="center" style="color: red">线路后台服务</h1>
+    </table>
+
+</body>
+<script>
+    var list = "";
+    $.ajax({
+        url: "/site/selectAll",
+        data: {},
+        dataType: "json",
+        type: "get",
+        async: "true",
+        success: function (result) {
+            list = result;
+        },
+        error: function (result) {
+            // alert("网络异常")
+        }
+    });
+
+    var $table = $("#table").bootstrapTable({
+            url:"/pathController/selectList",   //请求后台的URL（*）
+            method: 'GET',                      //请求方式（*）
+            striped: true,                      //是否显示行间隔色
+            toolbar: '#toolbar',                //工具按钮用哪个容器
+            pagination: false,                   //是否显示分页（*）
+            // pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
+            // pageSize: 2,                     //每页的记录行数（*）
+            // pageList: [2, 5, 8, 10],        //可供选择的每页的行数（*）
+            // sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            search: false,                      //是否显示表格搜索
+            showColumns: true,                  //是否显示所有的列（选择显示的列）
+            showRefresh: true,                  //是否显示刷新按钮
+            clickToSelect: true,                //是否启用点击选中行
+            uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+            showToggle: true,                   //是否显示详细视图和列表视图的切换按钮
+            smartDisplay: false,
+            columns: [{
+                checkbox: true,
+                visible: true                  //是否显示复选框
+            },{
+                field: 'id',
+                title: 'ID'
+            },{
+                field: 'startProvince',
+                title: '起始位置',
+            },{
+                field: 'endProvince',
+                title: '结束位置'
+            },{
+                field: 'siteId',
+                title: '站点id',
+                formatter: function (value, row, index) {
+                    alert(value)
+                    var ss = "";
+                    if (value == undefined){
+                        return "没有途径站点";
+                    }else{
+                        var va = value.split(",");
+                        for (let i = 0; i < list.length; i++) {
+                            if (va[i] == list[i].siteId){
+                                ss += list[i].siteName + "," ;
+                            }
+                        }
+                        return ss;
+                    }
+
+                }
+                //         if(value == null){
+                //             return "没有途径站点";
+                //         }
+                //         if(list.siteId == value){
+                //             return list[i].siteName;
+                //     }
+                // },
+            }
+                ,{
+                    field: 'id',
+                    title: '操作',
+                    formatter:function (value, row, index) {
+                        var result = "";
+                        result += "<a href='javascript:;' class='btn btn-xs blue' onclick=\"toupdate('" + value + "')\" title='编辑'><span class='glyphicon glyphicon-pencil'></span></a>";
+                        result += "<a href='javascript:dropInfo("+value+")' class='btn btn-xs red'  title='删除'><span class='glyphicon glyphicon-remove'></span></a>";
+                        return result;
+                    },
+
+                }],
+        })
+
+
+    //跳转到增加
+    function toAdd(){
+        location.href = "/pathController/toAddPathInfo";
+    }
+
+
+
+    //删除
+    function dropInfo(id) {
+        if (confirm("确认删除？")) {
+            $.ajax({
+                url: "/pathController/deleteByPath/" + id,
+                type: "delete",
+                dataType: "json",
+                async: true,
+                success: function (result) {
+                    if (result.code == 200) {
+                        // $("#content").bootstrapTable("refresh");
+                        location.reload();
+                        toastr.success("删除成功");
+                    }
+                },
+                error: function () {
+                    toastr.error("删除异常");
+                }
+            })
+        }
+    }
+
+</script>
+</html>

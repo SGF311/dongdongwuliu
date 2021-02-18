@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.dongdongwuliu</groupId>
+    <artifactId>dongdongwuliu_parent</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>dongdongwuliu-person-service</module>
+        <module>dongdongwuliu-advertising-service</module>
+        <module>dongdongwuliu-orders-service</module>
+        <module>dongdongwuliu-car-service</module>
+        <module>dongdongwuliu-site-service</module>
+        <module>dongdongwuliu-path-service</module>
+        <module>dongdongwuliu-price-service</module>
+        <module>dongdongwuliu-connect-service</module>
+        <module>dongdongwuliu-statement-service</module>
+        <module>dongdongwuliu-seckill-service</module>
+        <module>dongdongwuliu-quartz-service</module>
+        <module>dongdongwuliu-sms-code-service</module>
+        <module>dongdongwuliu-user-service</module>
+        <module>dongdongwuliu-common</module>
+        <module>dongdongwuliu-service-api</module>
+        <module>dongdongwuliu-domain</module>
+        <module>dongdongwuliu-core</module>
+        <module>dongdongwuliu-zull-service</module>
+        <module>dongdongwuliu-admin-web</module>
+        <module>dongdongwuliu-web</module>
+        <module>dongdongwuliu-address-service</module>
+        <module>dongdongwuliu-es-service</module>
+    </modules>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.2.RELEASE</version>
+    </parent>
+    <properties>
+        <!-- Environment Settings -->
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!-- Spring Settings-->
+        <spring-cloud.version>Hoxton.SR1</spring-cloud.version>
+    </properties>
+    <!-- 锁定springcloud版本号-->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- spring-cloud-alibaba -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>2.2.0.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

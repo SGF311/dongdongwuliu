@@ -1,0 +1,15 @@
+server:
+  port: 8040
+spring:
+  application:
+    name: dongdongwuliu-car-service #设置微服务名称
+  cloud:
+    nacos:
+      discovery:
+#        server-addr: 47.117.124.172:8848
+        server-addr: 127.0.0.1:8848
+      config:
+#        server-addr: 47.117.124.172:8848 #Nacos作为配置中心地址
+        server-addr: 127.0.0.1:8848 #Nacos作为配置中心地址
+        file-extension: yml #指定yml格式配置
+        group: DEV-GROUP #组

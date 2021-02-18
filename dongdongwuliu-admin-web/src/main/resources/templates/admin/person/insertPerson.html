@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="myInsertUser">
+    <input type="hidden" name="upwd" value="123">
+    <input type="hidden" name="longitude" value="116.595197">
+    <input type="hidden" name="latitude" value="34.693427">
+    姓名：<input type="text" name="uname"><br/>
+    手机号：<input type="text" name="phone"><br/>
+    所属部门：
+    <select name="type" onchange="changeType()">
+        <option value="0">总公司</option>
+        <option value="1">站点</option>
+    </select><br/>
+    <div id="mySite">
+
+    </div>
+    角色：
+    <div th:each="role : ${roles}">
+        <input type="checkbox" name="role" th:value="${role.rid}">[[${role.rname}]]
+    </div>
+</form>
+</body>
+<script>
+    function changeType(){
+        var type = $("[name=type]").val();
+        if (type == 1) {
+            $.ajax({
+                url: "/site/selectAll",
+                data: {},
+                dataType: "json",
+                type: "get",
+                async: "true",
+                success: function (result) {
+                    alert("222");
+                    var content = "站点信息:";
+                     content += "<select name='sid'>";
+                    for (var i = 0; i < result.length; i++) {
+                        content += '<option value="'+result[i].siteId+'">'+result[i].siteName+'</option>'
+                    }
+                    content += "</select><br/>";
+                    console.log(content)
+                    $("#mySite").html(content);
+                },
+                error: function (result) {
+                    alert("网络异常")
+                }
+            })
+        }else{
+            $("#mySite").html("");
+        }
+    }
+
+</script>
+</html>

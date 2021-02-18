@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="updateContentForm">
+    <table class="table table-bordered table-striped"  width="800px">
+        <tr>
+            <td>广告分类</td>
+            <td>
+                <input type="hidden" name="id" th:value="${tbContentVO.id}">
+                <select class="form-control" name="categoryId">
+                    <option th:each=" cc : ${list}" th:selected="${cc.id == tbContentVO.id }"  th:value="${cc.id}">[[${cc.name}]]</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>标题</td>
+            <td><input  class="form-control" placeholder="标题"  name="title" th:value="${tbContentVO.title}">  </td>
+        </tr>
+        <tr>
+            <td>URL</td>
+            <td><input  class="form-control" placeholder="URL" name="url" th:value="${tbContentVO.url}">  </td>
+        </tr>
+        <tr>
+            <td>排序</td>
+            <td><input  class="form-control" placeholder="排序" name="sortOrder" th:value="${tbContentVO.sortOrder}">  </td>
+        </tr>
+        <tr>
+            <td>图片</td>
+            <td>
+                <input type="file" id="updateFile" name="myFile" multiple/>
+                <input type="hidden" name="pic" id="fileName" th:value="${tbContentVO.pic}">
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+<script th:inline="javascript">
+    var pic = [[${tbContentVO.pic}]];
+    $('#updateFile').fileinput({
+        language: 'zh',
+        uploadUrl: '/file/upload',
+        browseClass: 'btn btn-primary',
+        allowedFileTypes: ["image"],
+        maxFileSize: 10240,
+        maxFileCount: 4,
+        enctype: "multipart/form-data",
+        initialPreviewAsData: true,//是否初始预览图片
+        initialPreviewFileType: 'image',//回显文件类型(初始预览文件类型)
+        initialPreview:pic//图片回显(初始预览图片地址)
+    });
+    $('#updateFile').on('fileuploaded',function (event,data,previewId,index) {
+        $("#fileName").val(data.response.data);
+    })
+
+    $('#updateFile').fileinput('refresh');//文件框刷新操作
+</script>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>增加配送价格</title>
+</head>
+<body>
+    <form id="insertForm">
+        配送点ID:
+            <select name="siteId">
+                <option value="">请选择</option>
+                <option th:each="site : ${list}" th:value="${site.siteId}">[[${site.siteId}]]</option>
+            </select><br/>
+        配送范围(KM):
+            <input type="text" name="siteScope"><br/>
+        单位重量价格(KG/元):
+            <input type="text" name="weightPrice"><br/>
+        单位体积价格(m3/元)：
+            <input type="text" name="volumePrice"><br/>
+        备注：
+            <textarea type="text" name="remark"></textarea><br/>
+    </form>
+</body>
+</html>

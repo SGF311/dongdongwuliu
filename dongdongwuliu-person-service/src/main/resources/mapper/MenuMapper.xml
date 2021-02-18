@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dongdongwuliu.mapper.MenuMapper" >
+    <resultMap id="BaseResultMap" type="com.dongdongwuliu.pojo.Menu" >
+        <id column="mid" property="mid" jdbcType="INTEGER" />
+        <result column="text" property="text" jdbcType="VARCHAR" />
+        <result column="url" property="url" jdbcType="VARCHAR" />
+        <result column="pid" property="pid" jdbcType="INTEGER" />
+    </resultMap>
+    <select id="selectGetUserList" resultMap="BaseResultMap">
+    select DISTINCT rs.* FROM menu rs
+    LEFT JOIN role_menu rr on rs.mid = rr.mid
+    LEFT JOIN tb_role r on rr.rid = r.rid
+    LEFT JOIN person_role ur on ur.rid = r.rid
+    LEFT JOIN tb_person au on au.uid = ur.pid
+    where au.uid = #{uid}
+  </select>
+
+
+</mapper>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="myInsertInto">
+    角色名称:<input type="text" name="rname" id="rname"><br>
+    <div class="zTreeDemoBackground left">
+        权限选择:<ul id="treeDemo" class="ztree"></ul>
+    </div>
+</form>
+</body>
+<script>
+    var setting = {
+        check: {
+            enable: true,
+        },
+        async: {
+            enable: true,
+            url: "/menu/getZtree",
+            autoParam: ["id", "name=n", "level=lv"],
+            otherParam: {"otherParam": "zTreeAsyncTest"},
+        },
+    };
+    init()
+    function init() {
+        $.fn.zTree.init($("#treeDemo"), setting);
+    }
+</script>
+</html>

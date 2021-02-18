@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>修改配送价格</title>
+</head>
+<body>
+    <form id="insertForm">
+        <input type="hidden" name="orderId" th:value="${connect.orderId}"><br/>
+        站点ID:
+            <input type="text" name="siteId" th:value="${connect.siteId}"><br/>
+        车牌号：
+            <input type="text" name="carNumber" th:value="${connect.carNumber}"><br/>
+        内容:
+            <textarea type="text" name="content">[[${connect.content}]]</textarea><br/>
+    </form>
+</body>
+</html>

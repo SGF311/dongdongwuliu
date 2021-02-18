@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/common/commonCss.js"></script>
+    <script src="/common/commonJs.js"></script>
+</head>
+<body>
+<form id="addForm">
+    <div class="form-group">
+        <label>开始位置</label>
+            <select name="pIdStart" onchange="cityInfo(1,this)">
+                <option value="-1">请选择</option>
+                <option  th:each="list : ${pList}"  th:value="${list.provinceid}">[[${list.province}]]</option>
+            </select>
+        <div name="cityIdStart1">
+        </div>
+        <div name="areaIdStart1">
+        </div>
+    </div>
+    <div class="form-group">
+        <label>结束位置</label>
+        <select name="pIdEnd"  onchange="cityInfo(2,this)">
+            <option value="-1">请选择</option>
+            <option  th:each="list : ${pList}" th:value="${list.provinceid}">[[${list.province}]]</option>
+        </select>
+        <div name="cityIdStart2">
+        </div>
+        <div name="areaIdStart2">
+        </div>
+    </div>
+    <div >
+        <input type="button" value="增加" onclick="toAddInfo()">
+    </div>
+
+</form>
+</body>
+</html>
+<script>
+    // 根据市级id查询下属区
+    function areaInfo(status,value){
+        let cityid = value.value;
+        $.ajax({
+            url:"/pathController/findTownListByCityid/" + cityid,
+            type:"post",
+            dataType:"json",
+            async:false,
+            success:function (result){
+                let data = "";
+                if (status==1){
+                    // 开始站点
+                    data += '<select name="aIdStart" >';
+                }else if(status==2){
+                    // 结束站点
+                    data += '<select name="aIdEnd">';
+                }
+                data += '<option value="-1">请选择</option>';
+                for (let i = 0; i < result.length; i++) {
+                    data += '<option value="'+result[i].areaid+'">'+result[i].area+'</option>';
+                }
+                data += '</select>';
+                if (status==1){
+                    // 开始站点
+                    $("[name=areaIdStart1]").html(data);
+                }else if(status==2){
+                    // 结束站点
+                    $("[name=areaIdStart2]").html(data);
+                }
+            },
+            error:function (){
+                alert("增加路径异常");
+            }
+        })
+    }
+
+
+    //增加入库
+    function toAddInfo(){
+        //开始位置
+        var pidStart = $("[name=pIdStart]").val();
+        var cid1 = $("[name=cIdStart]").val();
+        var aid1 = $("[name=aIdStart]").val();
+
+        //借宿位置
+        var pidEnd = $("[name=pIdEnd]").val();
+        var cid2 = $("[name=cIdEnd]").val();
+        var aid2 = $("[name=aIdEnd]").val();
+        var start = pidStart + "," + cid1 + "," + aid1;
+        var end = pidEnd + "," + cid2 + "," + aid2;
+
+        $.ajax({
+            url: "/pathController/addSpecial",
+            type: "post",
+            dataType: "json",
+            data : {startProvince: start, endProvince:end},
+            async: false,
+            success: function (result) {
+                location.reload();
+            },
+            error:function (result){
+                toastr.error("增加成功");
+            }
+        })
+    }
+
+    // 根据省级id查询下属市
+    function cityInfo(status,value){
+        let provinceId = value.value;
+        $.ajax({
+            url:"/pathController/findCityListByProvinceId/" + provinceId,
+            type:"post",
+            dataType:"json",
+            async:false,
+            success:function (result){
+                let data = "";
+                if (status==1){
+                    // 开始站点
+                    data += '<select name="cIdStart"  onchange="areaInfo(1,this)">';
+                }else if(status==2){
+                    // 结束站点
+                    data += '<select name="cIdEnd"  onchange="areaInfo(2,this)">';
+                }
+                data += '<option value="-1">请选择</option>';
+                for (let i = 0; i < result.length; i++) {
+                    data += '<option value="'+result[i].cityid+'">'+result[i].city+'</option>';
+                }
+            data += '</select>';
+                if (status==1){
+                    // 开始站点
+                    $("[name=cityIdStart1]").html(data);
+                }else if(status==2){
+                    // 结束站点
+                    $("[name=cityIdStart2]").html(data);
+                }
+            },
+            error:function (){
+                alert("增加路径异常");
+            }
+        })
+    }
+</script>

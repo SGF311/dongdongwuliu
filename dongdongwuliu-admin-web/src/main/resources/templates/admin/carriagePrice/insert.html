@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>增加普通线路运输价格</title>
+</head>
+<body>
+    <form id="insertForm">
+        线路ID:
+            <select name="pathId">
+                <option value="">请选择</option>
+                <option th:each="path : ${pathList}" th:value="${path.id}">[[${path.id}]]</option>
+            </select><br/>
+        首重(KG):
+            <input type="text" name="firstKg"><br/>
+        首重价格(KG/元):
+            <input type="text" name="firstKgPrice"><br/>
+        次重(KG)：
+            <input type="text" name="otherKg"><br/>
+        次重价格(KG/元)：
+            <input type="text" name="otherKgPrice"><br/>
+        首立方(m3)：
+            <input type="text" name="firstStere"><br/>
+        首立方价格(m3/元)：
+            <input type="text" name="firstSterePrice"><br/>
+        次立方(m3)：
+            <input type="text" name="otherStere"><br/>
+        次立方价格(m3/元)：
+            <input type="text" name="otherSterePrice"><br/>
+        备注：
+            <textarea type="text" name="remake"></textarea><br/>
+    </form>
+</body>
+</html>

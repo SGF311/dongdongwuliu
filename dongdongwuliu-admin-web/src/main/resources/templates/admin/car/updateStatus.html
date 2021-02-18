@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="updateForm">
+    <table>
+        <tr>
+            <th colspan="2">更改车辆状态</th>
+            <input type="hidden" name="carId" th:value="${carVO.carId}">
+            <input type="hidden" name="siteId" th:value="${carVO.siteId}">
+        </tr>
+<!--        <tr>-->
+<!--            <th>汽车名称</th>-->
+<!--            <td>-->
+<!--                <input type="text" name="carName" th:value="${carVO.carName}" readonly="readonly">-->
+<!--            </td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <th>车牌号</th>-->
+<!--            <td>-->
+<!--                <input type="text" name="carNumber" th:value="${carVO.carNumber}" readonly="readonly">-->
+<!--            </td>-->
+<!--        </tr>-->
+
+
+        <tr>
+            <th>状态</th>
+            <td>
+                <input type="radio" name="status" value="0" th:checked="${carVO.status == 0}">空闲
+                <input type="radio" name="status" value="1" th:checked="${carVO.status == 1}">运行中
+                <input type="radio" name="status" value="2" th:checked="${carVO.status == 2}">故障中
+            </td>
+        </tr>
+<!--        <tr>-->
+<!--            <th>载重</th>-->
+<!--            <td>-->
+<!--                <input type="text" name="dead" th:value="${carVO.dead}" readonly="readonly">KG-->
+<!--            </td>-->
+<!--        </tr>-->
+    </table>
+</form>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dongdongwuliu.mapper.TbSiteMapper">
+    <resultMap id="BaseResultMap" type="com.dongdongwuliu.pojo.TbSite" >
+        <id column="site_id" property="siteId" jdbcType="INTEGER" />
+        <result column="site_name" property="siteName" jdbcType="VARCHAR" />
+        <result column="pid" property="pid" jdbcType="VARCHAR" />
+        <result column="cid" property="cid" jdbcType="VARCHAR" />
+        <result column="aid" property="aid" jdbcType="VARCHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
+
+        <result column="province" property="province" jdbcType="VARCHAR" />
+        <result column="city" property="city" jdbcType="VARCHAR" />
+        <result column="area" property="area" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select s.*,p.province,c.city,a.area from tb_site s
+            LEFT JOIN tb_provinces p ON s.pid=p.provinceid
+            LEFT JOIN tb_cities c ON s.cid=c.cityid
+            LEFT JOIN tb_areas a ON s.aid=a.areaid ${ew.customSqlSegment}
+    </select>
+</mapper>

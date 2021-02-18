@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="contentForm">
+    <table class="table table-bordered table-striped"  width="800px">
+        <tr>
+            <td>广告分类</td>
+            <td>
+                <input type="hidden" name="id">
+                <select class="form-control" name="categoryId">
+                    <option value="">请选择</option>
+                    <option th:each=" list : ${list}" th:value="${list.id}">[[${list.name}]]</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>标题</td>
+            <td><input  class="form-control" placeholder="标题"  name="title">  </td>
+        </tr>
+        <tr>
+            <td>URL</td>
+            <td><input  class="form-control" placeholder="URL" name="url">  </td>
+        </tr>
+        <tr>
+            <td>排序</td>
+            <td><input  class="form-control" placeholder="排序" name="sortOrder">  </td>
+        </tr>
+        <tr>
+        <tr>
+            <td>图片</td>
+            <td>
+                <input type="file" id="myFile" name="myFile" multiple/>
+                <input type="text" name="pic" id="fileName" >
+            </td>
+        </tr>
+        </tr>
+    </table>
+</form>
+</body>
+<script>
+    $(function(){
+        $("#myFile").fileinput({
+            language: 'zh',
+            uploadUrl: '/file/upload',
+            allowedFileExtensions : ['png','jpg','gif','txt'],
+            maxFileSize : 2048,
+            maxFileCount : 5,
+            enctype : "multipart/form-data",
+            browseClass: 'btn btn-primary'
+        });
+        $("#myFile").on('fileuploaded',function (event,data,prevewId,index){
+            $("#fileName").val(data.response.data);
+
+        })
+    });
+</script>
+</html>

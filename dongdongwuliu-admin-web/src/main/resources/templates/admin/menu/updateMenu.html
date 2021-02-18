@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+<!--    &lt;!&ndash;公共js css&ndash;&gt;-->
+<!--    <script src="/common/commonCss.js"></script>-->
+<!--    <script src="/common/commonJs.js"></script>-->
+</head>
+<body>
+<form id = "updateForm">
+    <input type = "hidden" name = "mid" th:value = "${menu.mid}">
+    <div class="form-group">
+        <label>权限名</label>
+        <input type="text" placeholder="请输入菜单名称" class = "form-control" name="text" th:value="${menu.text}"><br/>
+    </div>
+    <div class="form-group">
+        <label>路径</label>
+        <input type = "text" name = "url" th:value="${menu.url}" placeholder="请输入菜单路径" class = "form-control">
+    </div>
+</form>
+</body>
+</html>

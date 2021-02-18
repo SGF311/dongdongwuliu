@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--公共js css-->
+    <script src="/common/commonCss.js"></script>
+    <script src="/common/commonJs.js"></script>
+</head>
+<script th:inline="javascript">
+
+    var provincesList = [[${provincesList}]];
+
+    function city(provinceId){
+        $.ajax({
+            url:"/orderController/getCity",
+            type:"get",
+            data:{provinceId:provinceId},
+            dataType:"json",
+            success:function(data){
+                var table = '';
+                table += '<option>请选择</option>';
+                for (let i = 0; i < data.length; i++) {
+                    table += '<option value="' + data[i].cityid + '">' + data[i].city + '</option>';
+                }
+                console.log(table);
+                $("#cityId").html(table);
+            },
+            error:function(data){
+                alert("有病")
+            }
+        })
+    }
+
+    function town(cityid){
+        $.ajax({
+            url:"/orderController/getTown",
+            type:"get",
+            data:{cityid:cityid},
+            dataType:"json",
+            success:function(data){
+                var table = '';
+                table += '<option>请选择</option>';
+                for (let i = 0; i < data.length; i++) {
+                    table += '<option value="' + data[i].areaid + '">' + data[i].area + '</option>';
+                }
+                console.log(table);
+                $("#townId").html(table);
+            },
+            error:function(data){
+                alert("有病")
+            }
+        })
+    }
+
+    function city2(provinceId){
+        $.ajax({
+            url:"/orderController/getCity",
+            type:"get",
+            data:{provinceId:provinceId},
+            dataType:"json",
+            success:function(data){
+                var table = '';
+                table += '<option>请选择</option>';
+                for (let i = 0; i < data.length; i++) {
+                    table += '<option value="' + data[i].cityid + '">' + data[i].city + '</option>';
+                }
+                console.log(table);
+                $("#cityId2").html(table);
+            },
+            error:function(data){
+                alert("有病")
+            }
+        })
+    }
+
+    function town2(cityid){
+        $.ajax({
+            url:"/orderController/getTown",
+            type:"get",
+            data:{cityid:cityid},
+            dataType:"json",
+            success:function(data){
+                var table = '';
+                table += '<option>请选择</option>';
+                for (let i = 0; i < data.length; i++) {
+                    table += '<option value="' + data[i].areaid + '">' + data[i].area + '</option>';
+                }
+                console.log(table);
+                $("#townId2").html(table);
+            },
+            error:function(data){
+                alert("有病")
+            }
+        })
+    }
+
+    function addOrderInfo(){
+        var provinceId = document.getElementById("provinceId");
+        var index = provinceId.selectedIndex; // 选中索引
+        // var value = sel.options[index].value;//要的值
+        var text = provinceId.options[index].text;//要的文本
+
+        var cityId = document.getElementById("cityId");
+        var index1 = cityId.selectedIndex; // 选中索引
+        var text1 = cityId.options[index1].text;//要的文本
+
+        var townId = document.getElementById("townId");
+        var index2 = townId.selectedIndex; // 选中索引
+        var text2 = townId.options[index2].text;//要的文本
+
+        var senderAreaName = text + text1 + text2;
+        $("#senderAreaName").val(senderAreaName);
+
+        var provinceId2 = document.getElementById("provinceId2");
+        var index2 = provinceId2.selectedIndex; // 选中索引
+        // var value = sel.options[index].value;//要的值
+        var text2 = provinceId2.options[index].text;//要的文本
+
+        var cityId2 = document.getElementById("cityId2");
+        var index12 = cityId2.selectedIndex; // 选中索引
+        var text12 = cityId2.options[index12].text;//要的文本
+
+        var townId2 = document.getElementById("townId2");
+        var index22 = townId2.selectedIndex; // 选中索引
+        var text22 = townId2.options[index22].text;//要的文本
+
+        var receiverAreaName = text2 + text12 + text22;
+        $("#receiverAreaName").val(receiverAreaName);
+
+        var cargoId = document.getElementById("cargoId");
+        var index3 = cargoId.selectedIndex; // 选中索引
+        var cargoName = cargoId.options[index3].text;//要的文本
+        $("#cargoName").val(cargoName);
+        $.ajax({
+            url:"/orderController/addOrderInfo",
+            type:"get",
+            data:$("#addForm").serialize(),
+            dataType:"json",
+            success:function(data){
+                alert(data);
+            },
+            error:function(data){
+                alert("成功")
+            }
+        })
+    }
+
+    //查看站点信息
+    function selectSite(){
+        //根据用户选择的寄件人地址信息查询站点
+        var townId = $("#townId option:selected").val();   //区
+        var cityId = $("#cityId option:selected").val();   //市
+        console.log(townId);
+        console.log(cityId);
+        //判断用户是否选择了地区，选择了
+        if (townId != -1){
+            //根据地区查询站点
+            $.ajax({
+                url:"/orderController/getTownBySite",
+                type:"get",
+                data:{aid:townId},
+                dataType:"json",
+                success:function(data){
+                    console.log(data);
+                    var table = "";
+                    table += "选择站点：<select name='siteId' id='siteId'>";
+                    table += "<option value='-1'>请选择</option>";
+                    //查询出来展示站点
+                    if (data.length != 0){
+                        for (let i = 0; i < data.length; i++) {
+                            table += "<option value='" + data[i].siteId + "'>" + data[i].siteName + "</option>";
+                        }
+                    }else{//没查询出来 就根据市查询站点
+                        //判断是否选择了市 , 选择了
+                        if (cityId != -1){
+                            //根据市查询站点
+                            getCityBySite(cityId);
+                        }else{//没选择  提示用户选择
+                            alert("您还没有选择市");
+                        }
+                    }
+                    table += "<select>";
+                    $("#site").html(table);
+                },
+                error:function(data){
+                    alert("有病")
+                }
+            })
+        }else{//没选择地区 就根据市查询站点
+            //判断是否选择了市 , 选择了
+            if (cityId != -1){
+                //根据市查询站点
+                getCityBySite(cityId);
+            }else{//没选择  提示用户选择
+                alert("您还没有选择市");
+            }
+        }
+    }
+
+    function getCityBySite(cityId){
+        $.ajax({
+            url:"/orderController/getCityBySite",
+            type:"get",
+            data:{cid:cityId},
+            dataType:"json",
+            success:function(data){
+                var table = "";
+                table += "选择站点：<select name='siteId' id='siteId'>";
+                table += '<option value="-1">请选择</option>';
+                for (let i = 0; i < data.length; i++) {
+                    table += "<option value='" + data[i].siteId + "'>" + data[i].siteName + "</option>";
+                }
+                table += "<select>";
+                $("#site").html(table);
+            },
+            error:function(data){
+                alert("有病")
+            }
+        })
+    }
+
+    //根据货物的体重距离等等计算价格
+    function selectPrice(){
+
+        var provinceId = document.getElementById("provinceId");
+        var index = provinceId.selectedIndex; // 选中索引
+        // var value = sel.options[index].value;//要的值
+        var text = provinceId.options[index].text;//要的文本
+
+        var cityId = document.getElementById("cityId");
+        var index1 = cityId.selectedIndex; // 选中索引
+        var text1 = cityId.options[index1].text;//要的文本
+
+        var townId = document.getElementById("townId");
+        var index2 = townId.selectedIndex; // 选中索引
+        var text2 = townId.options[index2].text;//要的文本
+
+        var senderAreaName = text + text1 + text2;
+        $("#senderAreaName").val(senderAreaName);
+
+        //获取用户填入的货物重量
+        var cargoWeight = $("#cargoWeight").val();
+        //获取用户填入的货物体积
+        var cargoVolume = $("#cargoVolume").val();
+        //获取站点信息，根据站点ID查询配送员经纬度，再将用户选择的寄件人地址信息解析成经纬度进行计算距离，在根据距离计算价格
+        //计算运输价格
+        // 查询线路价格  根据寄件人省编号 和 收件人省编号查询线路    再根据线路id    查询线路寄价价格
+        // 线路分为普通线路和专线
+        //获取寄件人省编号
+        var provinceId = $("#provinceId option:selected").val();
+        //获取收货人省编号
+        var provinceId2 = $("#provinceId2 option:selected").val();
+        $.ajax({
+            url:"/orderController/selectStartpidByInfo/" + provinceId + "/" + provinceId2,
+            type:"get",
+            data:{},
+            dataType:"json",
+            success:function(data){
+                //获取线路id   根据线路id查询线路价格
+                var pathId = data.id;
+                $("#circuitId").val(pathId);
+                var ji = "";
+                var shou = "";
+                for (let i = 0; i < provincesList.length; i++) {
+                    if (provincesList[i].provinceid == provinceId){
+                        ji += provincesList[i].province;
+                    }
+                    if (provincesList[i].provinceid == provinceId2){
+                        shou += provincesList[i].province;
+                    }
+                }
+                console.log("寄"+ji);
+                console.log("收"+shou);
+                $.ajax({
+                    url:"/orderController/getCarriagePriceByPathId/" + pathId,
+                    type:"get",
+                    data:{},
+                    dataType:"json",
+                    success:function(data){
+                        //首重
+                        var firstKg = data.firstKg;
+                        //首重价格
+                        var firstKgPrice = data.firstKgPrice;
+                        //首立方
+                        var firstStere = data.firstStere;
+                        //首立方价格
+                        var firstSterePrice = data.firstSterePrice;
+
+                        //计算获取到重量价格
+                        var wk = cargoWeight * firstKgPrice / firstKg;
+                        //计算获取到体积价格
+                        var vs = cargoVolume * firstSterePrice / firstStere;
+
+                        console.log("价格----------" + wk + "----" + vs);
+                        //取体积价格与重量价格两者之间的较大值
+                        if(eval(wk) > eval(vs)){//重量价格大
+                            //根据用户选择的寄件人省编号 和 收件人省编号计算距离   根据距离计算价格
+                            julijisuan(ji,shou,wk);
+                        }else{//体积价格大
+                            julijisuan(ji,shou,vs);
+                        }
+                    },
+                    error:function(data){
+                        alert("有病")
+                    }
+                })
+            },
+            error:function(data){
+                alert("有病")
+            }
+        })
+    }
+
+    //根据收件人地址编号  寄件人省编号 计算经纬度
+    function julijisuan(ji,shou,price){
+        $.ajax({
+            url:"http://restapi.amap.com/v3/geocode/geo?address="+ji+"&output=JSON&key=255053ebe2cc144cc9b0f27adbdd24e1",
+            type:"get",
+            data:{},
+            dataType:"json",
+            success:function(data){
+                var result = data.geocodes;//获取德邦生成的经纬度
+                var location = result[0].location;
+                console.log(location);
+                //将获取的经纬度截取成  经度  纬度
+                var split = location.split(",");
+                console.log("用户选择的寄件人省经纬度 ------"+split);
+                var longi = split[0];
+                var lati = split[1];
+                $.ajax({
+                    url:"http://restapi.amap.com/v3/geocode/geo?address="+shou+"&output=JSON&key=255053ebe2cc144cc9b0f27adbdd24e1",
+                    type:"get",
+                    data:{},
+                    dataType:"json",
+                    success:function(data){
+                        var result = data.geocodes;//获取德邦生成的经纬度
+                        var location = result[0].location;
+                        console.log(location);
+                        //将获取的经纬度截取成  经度  纬度
+                        var split = location.split(",");
+                        console.log("用户选择的收件人省经纬度 ------"+split);
+                        var longi2 = split[0];
+                        var lati2 = split[1];
+                        //根据经纬度计算距离   根据距离计算价格
+                        var distance = GetDistance(longi,lati,longi2,lati2);
+                        var juli = Math.ceil(distance);//向上取整
+                        console.log("距离 ---" + juli);
+                        //这里的距离计算价格暂时定死
+                        var jiage = juli * 2;
+                        var count = price + jiage;
+                        $("#price").html("<span>运输价格：<input type='text' readonly='readonly' name='trafficExpense' id='counts' value='" + count + "'></span>");
+                        //计算总价
+                        var cp = $("#cp").val();
+                        if (cp == null){
+                            $("#estimatedPrice").val(count);
+                            $("#amountPayable").val(count);
+                            $("#countPrice").html("<span>总价格：<input type='text' readonly='readonly' id='counpri' value='" + count + "'></span>");
+                        }else{
+                            var ccc = parseInt(count)+parseInt(cp);
+                            $("#estimatedPrice").val(ccc);
+                            $("#amountPayable").val(ccc);
+                            $("#countPrice").html("<span>总价格：<input type='text' readonly='readonly' id='counpri' value='" + ccc + "'></span>");
+                        }
+                    },
+                    error:function(data){
+                        alert("有病")
+                    }
+                })
+            },
+            error:function(data){
+                alert("有病")
+            }
+        })
+    }
+</script>
+<script>
+    function calculationAddress(address){
+        $.ajax({
+            url:"http://restapi.amap.com/v3/geocode/geo?address="+address+"&output=JSON&key=255053ebe2cc144cc9b0f27adbdd24e1",
+            type:"get",
+            data:{},
+            dataType:"json",
+            success:function(data){
+                var result = data.geocodes;//获取德邦生成的经纬度
+                console.log(result[0].location);
+            },
+            error:function(data){
+                alert("有病")
+            }
+        })
+    }
+
+    //进行经纬度转换为距离的计算
+    function Rad(d){
+        return d * Math.PI / 180.0;//经纬度转换成三角函数中度分表形式。
+    }
+    //计算距离，参数分别为第一点的纬度，经度；第二点的纬度，经度
+    function GetDistance(lat1,lng1,lat2,lng2){
+        var radLat1 = Rad(lat1);
+        var radLat2 = Rad(lat2);
+        var a = radLat1 - radLat2;
+        var  b = Rad(lng1) - Rad(lng2);
+        var s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a/2),2) +
+            Math.cos(radLat1)*Math.cos(radLat2)*Math.pow(Math.sin(b/2),2)));
+        s = s * 6378.137 ;// EARTH_RADIUS;
+        s = Math.round(s * 10000) / 10000; //输出为公里
+        //s=s.toFixed(4);
+        return s;
+    }
+
+</script>
+<body>
+    <form id="addForm">
+                    <input type="hidden" name="senderAreaName" id="senderAreaName">
+                    <input type="hidden" name="receiverAreaName" id="receiverAreaName">
+                    <input type="hidden" name="cargoName" id="cargoName">
+                    <input type="hidden" name="cccc" id="cccc">
+                    <input type="hidden" name="estimatedPrice" id="estimatedPrice">
+                    <input type="hidden" name="amountPayable" id="amountPayable">
+                    <input type="hidden" name="personId" id="personId">
+                    <input type="hidden" name="distance" id="distance">
+                    <input type="hidden" name="circuitId" id="circuitId">
+        收发货信息:<br>
+           寄件人姓名:<input type="text" placeholder="请输入寄件人姓名" id="sender" name="sender"><br>
+           联系电话:<input type="text" placeholder="请输入寄件人联系人电话" id="senderMobile" name="senderMobile"><br>
+           寄件人邮编:<input type="text" placeholder="请输入寄件人邮编" id="senderZipCode" name="senderZipCode"><br>
+           寄件地址:
+                    <div class="form-group area">
+                        <select onchange="city(this.value)" class="form-control" name="provinceId" id="provinceId">
+                            <option>请选择</option>
+                            <option th:each="provinces : ${provincesList}"
+                                    th:value="${provinces.provinceid}" th:text="${provinces.province}"></option>
+
+                        </select>
+                    </div>
+                        <div class="form-group area">
+                            <select onchange="town(this.value)" class="form-control" name="cityId" id="cityId">
+                                <option>请选择</option>
+                            </select>
+                        </div>
+                        <div class="form-group area">
+                            <select class="form-control" name="townId" id="townId">
+                                <option>请选择</option>
+                            </select>
+                        </div>
+        <input type="text" placeholder="详细街道" name="senderDetailedAddress"><br>
+        <br><br>
+
+        收件人姓名:<input type="text"  placeholder="请输入收件人姓名" id="receiver" name="receiver"><br>
+        联系电话:<input type="text"  placeholder="请输入收件人联系电话" id="receiverMobile" name="receiverMobile"><br>
+        收件人邮编:<input type="text"  placeholder="请输入收件人邮编" id="receiverZipCode" name="receiverZipCode"><br>
+        收件地址:
+        <div class="form-group area">
+            <select onchange="city2(this.value)" class="form-control" name="provinceId2" id="provinceId2">
+                <option>请选择</option>
+                <option th:each="provinces : ${provincesList}"
+                        th:value="${provinces.provinceid}" th:text="${provinces.province}"></option>
+            </select>
+        </div>
+        <div class="form-group area">
+            <select onchange="town2(this.value)" class="form-control" name="cityId2" id="cityId2">
+                <option>请选择</option>
+            </select>
+        </div>
+        <div class="form-group area">
+            <select class="form-control" name="townId2" id="townId2">
+                <option>请选择</option>
+            </select>
+        </div>
+        <input type="text" placeholder="详细街道" name="receiverDetailedAddress"><br>
+        <br><br>
+
+        货物类型：
+            <div class="form-group area">
+                <select class="form-control" name="cargoId" id="cargoId">
+                    <option>请选择</option>
+<!--                    <option th:each="cargoType : ${cargoTypeVOList}"-->
+<!--                            th:value="${cargoType.cargoId}" th:text="${cargoType.cargoName}"></option>-->
+                    <option value="1">文件</option>
+                    <option value="2">日用品</option>
+                    <option value="3">家具</option>
+                    <option value="4">家电</option>
+                    <option value="5">数码</option>
+                    <option value="6">食品</option>
+                    <option value="7">配件</option>
+                    <option value="8">服装</option>
+                </select>
+            </div><br>
+        重量(kg):<input type="text" name="cargoWeight" placeholder="货物重量应大于0" id="cargoWeight"><br>
+        体积(m3):<input type="text" name="cargoVolume" id="cargoVolume"><br>
+        <br><br>
+
+        服务信息:
+            <br>
+            货物保价：<input type="text" name="marginValue" id="marginValue"><br>
+<!--            上门取货时间：<input type="date" name="visitTime" id="visitTime">-->
+    </form>
+    <input type="button" onclick="selectPrice()" value="计算价格"><br>
+
+    <div id="price">
+    </div><br><br>
+
+    <div id="countPrice">
+    </div><br><br>
+
+    <input type="button" value="生成订单" onclick="addOrderInfo()">
+</body>
+</html>

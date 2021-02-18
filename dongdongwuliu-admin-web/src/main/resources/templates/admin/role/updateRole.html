@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="myUpdate">
+    <input type="hidden" name="rid" th:value="${role.rid}">
+    角色名称：<input type="text" name="rname" th:value="${role.rname}"><br/>
+    <div>
+        角色权限:
+        <div class="zTreeDemooBackground left">
+            <ul id="menus" class="ztree"></ul>
+        </div>
+    </div>
+</form>
+</body>
+<script>
+    var rid = $("[name=rid]").val();
+    var setting={
+        async: {
+            enable: true,
+            url: "/menu/getZtreeInfoChecked/"+rid,
+            autoParam: ["id", "name"]
+        },check: {
+            enable: true
+        }
+    }
+
+    $(document).ready(function(){
+        zTreeObj = $.fn.zTree.init($("#menus"), setting);
+    });
+</script>
+</html>

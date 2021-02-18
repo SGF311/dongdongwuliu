@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>增加订单物流信息</title>
+</head>
+<body>
+    <form id="insertForm">
+        订单ID:
+            <input type="text" name="orderId" th:value="${list[0].orderId}" readonly><br/>
+        站点ID:
+            <input type="text" name="siteId"><br/>
+        内容:
+            <textarea type="text" name="content"></textarea><br/>
+        车牌号：
+            <input type="text" name="carNumber"><br/>
+    </form>
+
+    <div class="modal-body">
+        <ul class="orderStatusContent" id="connect">
+            <!--<li>
+                <span class="orderStatusTime">2021-02-04 18:00:00</span>
+                <span class="orderStatusContent">已签收，签收人类型：本人</span>
+            </li>
+            <li>
+                <span class="orderStatusTime">2021-02-04 15:00:00</span>
+                <span class="orderStatusContent">派送中。派件员：刘贵权，电话：18531606458</span>
+            </li>
+            <li>
+                <span class="orderStatusTime">2021-02-04 08:00:00</span>
+                <span class="orderStatusContent">运输中，到达北京转运场</span>
+            </li>
+            <li>
+                <span class="orderStatusTime">2021-02-03 08:00:00</span>
+                <span class="orderStatusContent">您的订单已被收件员揽收,【 <font>江苏省徐州市丰县</font> 】库存中</span>
+            </li>-->
+        </ul>
+    </div>
+</body>
+</html>
+<script th:inline="javascript">
+    var connectList = [[${list}]];
+    var connect = ""
+    for (let i = 0; i < connectList.length; i++) {
+        if (connectList[i].courierId != null){
+            connect += '<li><span class="orderStatusTime">'+ connectList[i].date +'</span></br>'
+            connect += '<span class="orderStatusContent">派送中。派件员：'+ connectList[i].courierId +',电话：'+ connectList[i].courierId +'</span></br>'
+        }
+
+        if (connectList[i].siteId != null){
+            connect += '<li><span class="orderStatusTime">'+ connectList[i].date +'</span></br>'
+            connect += '<span class="orderStatusContent">运输中，到达：'+ connectList[i].siteId +'</span></br>'
+        }
+
+        connect += '<li><span class="orderStatusTime">'+ connectList[i].date +'</span></br>'
+        connect += '<span class="orderStatusContent">详情：'+ connectList[i].content +'</span></br>'
+    }
+    $("#connect").html(connect)
+</script>

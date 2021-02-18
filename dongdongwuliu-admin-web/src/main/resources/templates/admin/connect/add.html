@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>增加订单物流信息</title>
+</head>
+<body>
+    <form id="insertForm">
+        订单ID:
+            <input type="text" name="orderId" th:value="${orderId}" readonly><br/>
+        站点ID:
+            <input type="text" name="siteId"><br/>
+        配送人：
+            <input type="text" name="courierId"><br/>
+        配送员电话：
+            <input type="text" name="courierPhone"><br/>
+    </form>
+</body>
+</html>

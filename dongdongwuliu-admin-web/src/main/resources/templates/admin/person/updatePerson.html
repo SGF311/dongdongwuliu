@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="myUpdate">
+    <input type="hidden" name="uid" th:value="${tPerson.uid}">
+    姓名：<input type="text" name="uname" th:value="${tPerson.uname}"><br/>
+    手机号：<input type="text" name="phone" th:value="${tPerson.phone}"><br/>
+    所属部门：
+    <select name="type" onchange="changeType()">
+        <option value="0" th:selected="${tPerson.type eq 0}">总公司</option>
+        <option value="1" th:selected="${tPerson.type eq 1}">站点</option>
+    </select><br/>
+    <div id="mySite">
+
+    </div>
+    角色：
+    <div th:each="role : ${roles}">
+        <input type="checkbox" name="role" th:value="${role.rid}" th:checked="${#strings.contains(roleid,role.rid)}">
+        [[${role.rname}]]
+    </div>
+</form>
+</body>
+<script>
+
+    var type = [[${tPerson.type}]];
+
+    var sidSelected = [[${tPerson.sid}]]
+    // alert(type)
+    if(type == 1){
+        // alert("进入if")
+        changeType();
+    }
+    function changeType(){
+        var typeNow = $("[name=type]").val();
+        if(typeNow == 1){
+            $.ajax({
+                url: "/site/selectAll",
+                data: {},
+                dataType: "json",
+                type: "get",
+                async: "true",
+                success: function (result) {
+                    $("#mySite").empty()
+                    // alert("222");
+                    var content = "站点信息:";
+                    content += "<select name='sid'>";
+                    for (var i = 0; i < result.length; i++) {
+
+                        if(result[i].sid == sidSelected){
+                            content += '<option selected value="'+result[i].siteId+'">'+result[i].siteName+'</option>'
+                        }else{
+                            content += '<option value="'+result[i].siteId+'">'+result[i].siteName+'</option>'
+                        }
+
+                    }
+                    content += "</select><br/>";
+                    console.log(content)
+                    $("#mySite").html(content);
+                },
+                error: function (result) {
+                    alert("网络异常")
+                }
+            })
+        }else{
+            $("#mySite").html("");
+        }
+
+
+    }
+
+</script>
+</html>

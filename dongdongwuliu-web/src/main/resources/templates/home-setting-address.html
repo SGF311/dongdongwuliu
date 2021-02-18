@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE">
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+    <title>设置-个人信息</title>
+	<link rel="icon" href="assets/img/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="css/webbase.css" />
+    <link rel="stylesheet" type="text/css" href="css/pages-seckillOrder.css" />
+</head>
+
+<body>
+<!-- 头部栏位 -->
+<!--页面顶部-->
+<div id="nav-bottom">
+	<!--顶部-->
+	<div class="nav-top">
+		<div class="top">
+			<div class="py-container">
+				<div class="shortcut">
+					<ul class="fl">
+						<li class="f-item">东东物流欢迎您！</li>
+						<li class="f-item">请<a href="/tologin" target="_blank">登录</a>　<span><a href="register.html" target="_blank">免费注册</a></span></li>
+					</ul>
+					<ul >
+						<li class="f-item">城市：北京</li>
+						<li class="f-item">天气：晴天</li>
+						<li class="f-item">温度：-3</li>
+						<li class="f-item">风向：西北风，等级：3级大风</li>
+						<li class="f-item">湿度：20</li>
+					</ul>
+					<ul class="fr">
+						<li class="f-item"><a href="/toCreateOrder" >寄件</a></li>
+						<li class="f-item space"></li>
+						<li class="f-item"><a href="/toSearch" target="_blank">追踪与管理</a></li>
+						<li class="f-item space"></li>
+						<li class="f-item"><a href="/toUser">个人中心</a></li>
+						<li class="f-item space"></li>
+						<li class="f-item"><a href="/toMyOrder">我的订单</a></li>
+						<li class="f-item space"></li>
+						<li class="f-item"><a href="/toHomeSettingAddress">联系人管理</a></li>
+						<li class="f-item space"></li>
+						<li class="f-item"><a href="/toOverview" >关于东东物流</a></li>
+						<li class="f-item space"></li>
+						<li class="f-item" id="service">
+							<span>客户服务</span>
+							<ul class="service">
+								<li><a href="cooperation.html" target="_blank">合作招商</a></li>
+								<li><a href="shoplogin.html" target="_blank">商家后台</a></li>
+								<li><a href="cooperation.html" target="_blank">合作招商</a></li>
+								<li><a href="#">商家后台</a></li>
+							</ul>
+						</li>
+						<li class="f-item space"></li>
+						<li class="f-item">网站导航</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<!--头部-->
+		<div class="header">
+			<div class="py-container">
+				<div class="yui3-g Logo">
+					<div class="yui3-u Left logoArea" style="display: flex;align-items: center;justify-content: center">
+						<h2 >东东物流</h2>
+					</div>
+					<div class="yui3-u Center searchArea">
+						<div class="search">
+							<form action="" class="sui-form form-inline">
+								<!--searchAutoComplete-->
+								<div class="input-append">
+									<input  id="autocomplete" type="text" class="input-error input-xxlarge" placeholder="货物追踪，请输入订单号或者手机号"/>
+									<button class="sui-btn btn-xlarge btn-danger" type="button" onclick="search()">搜索</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+
+				<div class="yui3-g NavList" >
+					<div class="yui3-u Left all-sort" style="background: white!important;">
+					</div>
+					<div class="yui3-u Center navArea">
+						<ul class="nav">
+							<li class="f-item"><a href="/" >首页</a></li>
+							<li class="f-item"><a href="/toCreateOrder" >在线下单</a></li>
+							<li class="f-item"><a href="/toPrice" >价格时效查询</a></li>
+							<li class="f-item"><a href="/toSite" >网点查询</a></li>
+							<li class="f-item"><a href="/toSeckillIndex" target="_blank">秒杀优惠券</a></li>
+						</ul>
+					</div>
+					<div class="yui3-u Right"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="js/plugins/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$("#service").hover(function(){
+			$(".service").show();
+		},function(){
+			$(".service").hide();
+		});
+		$("#shopcar").hover(function(){
+			$("#shopcarlist").show();
+		},function(){
+			$("#shopcarlist").hide();
+		});
+	})
+</script>
+<script type="text/javascript" src="js/plugins/jquery.easing/jquery.easing.min.js"></script>
+<script type="text/javascript" src="js/plugins/sui/sui.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery-placeholder/jquery.placeholder.min.js"></script>
+<script type="text/javascript" src="js/widget/nav.js"></script>
+<script type="text/javascript" src="pages/userInfo/distpicker.data.js"></script>
+<script type="text/javascript" src="pages/userInfo/distpicker.js"></script>
+<script type="text/javascript" src="pages/userInfo/main.js"></script>
+</body>
+    <!--header-->
+    <div id="account">
+        <div class="py-container">
+            <div class="yui3-g home">
+                <!--右侧主内容-->
+                <div class="yui3-u-5-6">
+                    <div class="body userAddress">
+                        <div class="address-title">
+                            <span class="title">地址管理</span>
+							<a data-toggle="modal" data-target=".edit" data-keyboard="false"
+							   class="sui-btn  btn-info add-new" onclick="clearForm()">添加新地址</a>
+							<span class="clearfix"></span>
+                        </div>
+                        <div class="address-detail">
+                            <table class="sui-table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>姓名</th>
+                                        <th>地址</th>
+                                        <th>联系电话</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+								<!-- 用户地址 -->
+								<tbody id="addressId"></tbody>
+                            </table>
+                        </div>
+                        <!--新增地址弹出层-->
+                         <div  tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade edit" style="width:580px;">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" data-dismiss="modal" aria-hidden="true" class="sui-close">×</button>
+                                        <h4 id="myModalLabel" class="modal-title">新增地址</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="addFrom" class="sui-form form-horizontal">
+                                            <div class="control-group">
+												<label class="control-label">收货人：</label>
+												<div class="controls">
+													<input type="text" name="contact" class="input-medium">
+													<input type="hidden" name="id" class="input-medium">
+												</div>
+                                        	</div>
+											<div class="control-group">
+												<label class="control-label">所在地区：</label>
+												<div class="controls">
+													<div data-toggle="distpicker">
+														<div class="form-group area">
+															<select name="provinceId" onchange="getCityByProvinceId()" class="form-control"
+																	id="provinceId">
+																<option value="">请选择</option>
+															</select>
+														</div>
+														<div class="form-group area">
+															<select name="cityId" onchange="getAreasByCityid()" class="form-control" id="cityId">
+																<option value="">请选择</option>
+															</select>
+														</div>
+														<div class="form-group area">
+															<select name="townId" class="form-control"
+																	id="townId" >
+																<option value="">请选择</option>
+															</select>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="control-group">
+												<label class="control-label">详细地址：</label>
+												<div class="controls">
+													<input name="address" type="text" class="input-large">
+												</div>
+											</div>
+											<div class="control-group">
+												<label class="control-label">联系电话：</label>
+												<div class="controls">
+													<input type="text" name="mobile" class="input-medium">
+												</div>
+											</div>
+											<div class="control-group">
+												<label class="control-label">地址别名：</label>
+												<div class="controls">
+													<input type="text" readonly id="alias" name="alias" class="input-medium">
+												</div>
+												<div class="othername">
+													建议填写常用地址：<a href="#" class="sui-btn btn-default" onclick="changeAlias(this.text)">家里</a>
+													<a href="#" class="sui-btn btn-default" onclick="changeAlias(this.text)">父母家</a>
+													<a href="#" class="sui-btn btn-default" onclick="changeAlias(this.text)">公司</a>
+												</div>
+											</div>
+                                        </form>
+                                    </div>
+									<div class="modal-footer">
+										<button type="button" onclick="saveAddress()" data-ok="modal" class="sui-btn btn-primary btn-large">确定</button>
+										<button type="button" data-dismiss="modal" class="sui-btn btn-default btn-large">取消</button>
+									</div>
+                                </div>
+                            </div>
+						</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 底部栏位 -->
+    <!--页面底部-->
+<div class="clearfix footer">
+	<div class="py-container">
+		<div class="footlink">
+			<div class="Mod-service">
+				<ul class="Mod-Service-list">
+					<li class="grid-service-item intro  intro1">
+						<i class="serivce-item fl"></i>
+						<div class="service-text">
+							<h4>正品保障</h4>
+							<p>正品保障，提供发票</p>
+						</div>
+					</li>
+					<li class="grid-service-item  intro intro2">
+						<i class="serivce-item fl"></i>
+						<div class="service-text">
+							<h4>正品保障</h4>
+							<p>正品保障，提供发票</p>
+						</div>
+					</li>
+					<li class="grid-service-item intro  intro3">
+						<i class="serivce-item fl"></i>
+						<div class="service-text">
+							<h4>正品保障</h4>
+							<p>正品保障，提供发票</p>
+						</div>
+					</li>
+					<li class="grid-service-item  intro intro4">
+						<i class="serivce-item fl"></i>
+						<div class="service-text">
+							<h4>正品保障</h4>
+							<p>正品保障，提供发票</p>
+						</div>
+					</li>
+					<li class="grid-service-item intro intro5">
+						<i class="serivce-item fl"></i>
+						<div class="service-text">
+							<h4>正品保障</h4>
+							<p>正品保障，提供发票</p>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="clearfix Mod-list">
+				<div class="yui3-g">
+					<div class="yui3-u-1-6">
+						<h4>购物指南</h4>
+						<ul class="unstyled">
+							<li>购物流程</li>
+							<li>会员介绍</li>
+							<li>生活旅行/团购</li>
+							<li>常见问题</li>
+							<li>购物指南</li>
+						</ul>
+					</div>
+					<div class="yui3-u-1-6">
+						<h4>配送方式</h4>
+						<ul class="unstyled">
+							<li>上门自提</li>
+							<li>211限时达</li>
+							<li>配送服务查询</li>
+							<li>配送费收取标准</li>
+							<li>海外配送</li>
+						</ul>
+					</div>
+					<div class="yui3-u-1-6">
+						<h4>支付方式</h4>
+						<ul class="unstyled">
+							<li>货到付款</li>
+							<li>在线支付</li>
+							<li>分期付款</li>
+							<li>邮局汇款</li>
+							<li>公司转账</li>
+						</ul>
+					</div>
+					<div class="yui3-u-1-6">
+						<h4>售后服务</h4>
+						<ul class="unstyled">
+							<li>售后政策</li>
+							<li>价格保护</li>
+							<li>退款说明</li>
+							<li>返修/退换货</li>
+							<li>取消订单</li>
+						</ul>
+					</div>
+					<div class="yui3-u-1-6">
+						<h4>特色服务</h4>
+						<ul class="unstyled">
+							<li>夺宝岛</li>
+							<li>DIY装机</li>
+							<li>延保服务</li>
+							<li>东东商城E卡</li>
+							<li>东东商城通信</li>
+						</ul>
+					</div>
+					<div class="yui3-u-1-6">
+						<h4>帮助中心</h4>
+						<img src="img/wx_cz.jpg">
+					</div>
+				</div>
+			</div>
+			<div class="Mod-copyright">
+				<ul class="helpLink">
+					<li>关于我们<span class="space"></span></li>
+					<li>联系我们<span class="space"></span></li>
+					<li>关于我们<span class="space"></span></li>
+					<li>商家入驻<span class="space"></span></li>
+					<li>营销中心<span class="space"></span></li>
+					<li>友情链接<span class="space"></span></li>
+					<li>关于我们<span class="space"></span></li>
+					<li>营销中心<span class="space"></span></li>
+					<li>友情链接<span class="space"></span></li>
+					<li>关于我们</li>
+				</ul>
+				<p>地址：北京市昌平区沙阳路18号 邮编：100000 电话：400-0123-302</p>
+				<p>京ICP备08006666号京公网安备11010888888</p>
+			</div>
+		</div>
+	</div>
+</div>
+<!--页面底部END-->
+</html>
+<script>
+	$(function (){
+		getProvincesAll();
+		getUserAddr()
+	})
+
+	var userId = '1356992691036086272'
+
+	// 获取用户地址
+	function getUserAddr(){
+		$.ajax({
+			url : "/userAddress/getAddressByUserId?userId=" + userId,
+			type : "get",
+			dataType : "json",
+			success : function (result) {
+				if (result.code == 200) {
+					var list = result.data
+					var content = ""
+					for (let i = 0; i < list.length; i++) {
+						content+=` <tr>
+							<td>${list[i].contact}</td>
+							<td>${list[i].province}  ${list[i].city}  ${list[i].area}  ${list[i].address}</td>
+							<td>${list[i].mobile}</td>
+							<td>
+								<a href="javascript:;" onclick="getAddressDetail(${list[i].id})" data-toggle="modal" data-target=".edit" data-keyboard="false" >编辑</a>
+								<a  href="javascript:deleteAddressById(${list[i].id})">删除</a>
+								${list[i].isDefault == 1?"默认地址":'<a href="javascript:updataDefault('+list[i].id+')">设为默认</a>'}
+							</td></tr>`
+					}
+					$("#addressId").html(content)
+				}else {
+					alert(result.message);
+				}
+			},
+			error : function (data) {
+				alert("系统错误");
+			}
+		});
+	}
+
+	// 获取省
+	function getProvincesAll() {
+		$.get("/provincesController/getInfo",null,function (res) {
+			var list = res.data;
+			for (let i = 0; i < list.length; i++) {
+				$("#provinceId").append(`<option value="${list[i].provinceid}">${list[i].province}</option>`)
+			}
+		})
+	}
+
+	//获取市
+	function getCityByProvinceId() {
+		$.ajaxSettings.async = false;
+		var provinceid = $("#provinceId").val()
+		$.get("/provincesController/getCity",{provinceId: provinceid},function (res) {
+			var list = res.data;
+			$("#cityId").html(`<option value="">请选择</option>`)
+			$("#townId").html(`<option value="">请选择</option>`)
+			for (let i = 0; i < list.length; i++) {
+				$("#cityId").append(`<option value="${list[i].cityid}">${list[i].city}</option>`)
+			}
+		})
+		$.ajaxSettings.async = true;
+	}
+
+	//获取区
+	function getAreasByCityid() {
+		var cityid = $("#cityId").val()
+		$.ajaxSettings.async = false;
+		$.get("provincesController/getTown",{cityid},function (res) {
+			var list = res.data;
+			$("#townId").html(`<option value="">请选择</option>`)
+			for (let i = 0; i < list.length; i++) {
+				$("#townId").append(`<option value="${list[i].areaid}">${list[i].area}</option>`)
+			}
+		})
+		$.ajaxSettings.async = true;
+	}
+
+	//地址别名
+	function changeAlias(value) {
+		$("#alias").val(value)
+	}
+
+	//保存收货人
+	function saveAddress(){
+		if(!$("[name=id]").val()){
+			$.post("/userAddress/addAddress",$("#addFrom").serialize(),function (res) {
+				if(res.code == 200){
+					alert("保存成功")
+					getUserAddr();
+				}else{
+					alert(res.message)
+				}
+			})
+		}else{
+			$.post("/userAddress/updateAddress",$("#addFrom").serialize(),function (res) {
+				if(res.code == 200){
+					alert("修改成功")
+					getUserAddr();
+				}else{
+					alert(res.message)
+				}
+			})
+		}
+
+	}
+
+	//设为默认
+	function updataDefault(id) {
+		/*$.get("/userAddress/updateDefault", {id,isDefault:1},function (res) {
+			if(res.code == 200){
+				alert("修改成功")
+				getUserAddr();
+			}else{
+				alert(res.message)
+			}
+		})*/
+	}
+
+	//删除收货人
+	function deleteAddressById(id) {
+		if(confirm("确认删除吗?")){
+			$.get("/userAddress/deleteAddressById", {id},function (res) {
+				if(res.code == 200){
+					alert("删除成功")
+					getUserAddr();
+				}else{
+					alert(res.message)
+				}
+			})
+		}
+	}
+
+	//根据id获取详情
+	function getAddressDetail(id) {
+		$("#addFrom")[0].reset();
+		$.get("/userAddress/getAddressById", {id},function (res) {
+			if(res.code == 200){
+				$("[name=id]").val(res.data.id)
+				$("[name=contact]").val(res.data.contact);
+				$("[name=provinceId]").val(res.data.provinceId);
+				getCityByProvinceId()
+				$("[name=cityId]").val(res.data.cityId)
+				getAreasByCityid()
+				$("[name=address]").val(res.data.address)
+				$("[name=mobile]").val(res.data.mobile)
+				$("[name=alias]").val(res.data.alias)
+				$("[name=townId]").val(res.data.townId)
+			}else{
+				alert(res.message)
+			}
+		})
+	}
+
+	//增加弹框
+	function clearForm() {
+		$("#addFrom")[0].reset();
+	}
+
+</script>

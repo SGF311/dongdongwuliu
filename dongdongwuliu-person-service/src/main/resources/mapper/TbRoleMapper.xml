@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dongdongwuliu.mapper.TbRoleMapper" >
+    <resultMap id="BaseResultMap" type="com.dongdongwuliu.pojo.TbRole" >
+        <id column="rid" property="rid" jdbcType="INTEGER" />
+        <result column="rname" property="rname" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+
+    </sql>
+    <insert id="insertReturnRid" keyProperty="rid" keyColumn="rid" useGeneratedKeys="true">
+    insert into `tb_role` (rname) value (#{rname})
+  </insert>
+</mapper>

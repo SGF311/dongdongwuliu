@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="addForm">
+    <table>
+        <tr>
+            <th colspan="2">添加站点信息</th>
+        </tr>
+        <tr>
+            <th>站点名称:</th>
+            <td>
+                <input type="text" name="siteName">
+            </td>
+        </tr>
+        <tr>
+            <th>地址:</th>
+            <td>
+                省:
+                <select name="pid" id="addpid" onchange="getCity(this.value)">
+                    <!--加了参数会跳但是不展示所有数据了-->
+                    <option value="">请选择</option>
+                    <option th:each="tbProvinces : ${listTbProvinces}" th:value="${tbProvinces.provinceid}">[[${tbProvinces.province}]]</option>
+                </select>
+                市:
+                <select name="cid" id="addcid" onchange="getTown(this.value)">
+                    <option value="">请选择</option>
+                </select>
+                县:
+                <select name="aid" id="addaid">
+                    <option value="">请选择</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>详细地址:</th>
+            <td>
+                <input type="text" name="address">
+            </td>
+        </tr>
+        <tr>
+            <th>联系电话:</th>
+            <td>
+                <input type="text" name="phone">
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+<script>
+    //获取市的信息
+    function getCity(provinceId){
+        $.ajax({
+            url: "/site/getCity/" + provinceId,
+            type: "post",
+            dataType: "json",
+            success: function (result) {
+                var content = "";
+                content += '<option value="-1">请选择</option>';
+                for (let i = 0; i < result.length; i++) {
+                    content += '<option value="' + result[i].cityid +'">' + result[i].city + '</option>';
+                }
+                $("#addcid").html(content);
+                $("#addaid").html('<option value="-1">请选择</option>')
+            },
+            error: function (obj) {
+                message("网络异常")
+            }
+        })
+    }
+
+    //获取县的信息
+    function getTown(cityid){
+        $.ajax({
+            url: "/site/getTown/" + cityid,
+            type: "post",
+            dataType: "json",
+            success: function (result) {
+                var content = "";
+                content += '<option value="">请选择</option>';
+                for (let i = 0; i < result.length; i++) {
+                    content += '<option value="' + result[i].areaid +'">' + result[i].area + '</option>';
+                }
+                $("#addaid").html(content);
+            },
+            error: function (obj) {
+                message("网络异常")
+            }
+        })
+    }
+</script>
+</html>

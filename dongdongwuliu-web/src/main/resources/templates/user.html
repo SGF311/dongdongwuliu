@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE">
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+	<title>个人中心</title>
+
+
+    <link rel="stylesheet" type="text/css" href="/css/webbase.css" />
+    <link rel="stylesheet" type="text/css" href="/css/pages-register.css" />
+</head>
+
+<body>
+	<div class="register py-container ">
+		<!--head-->
+		<div class="logoArea">
+			<h1 style="text-align: center">个人中心</h1>
+		</div>
+		<!--register-->
+		<div class="registerArea">
+			<h3>完善个人资料</h3>
+			<div class="info">
+				<form id="update" class="sui-form form-horizontal">
+					<input name="id"  type="hidden"  th:value="${tbUserVO.id}" class="input-xfat input-xlarge">
+
+					<div class="control-group">
+						<label class="control-label">用户名：</label>
+						<div class="controls">
+							<input name="username" readonly type="text"  placeholder="请输入你的用户名" th:value="${tbUserVO.username}" class="input-xfat input-xlarge">
+							<span style="color: red" id="mySpan"></span>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">手机号：</label>
+						<div class="controls">
+							<input type="text" th:value="${tbUserVO.phone}" id="phone" readonly name="phone" placeholder="请输入你的手机号" class="input-xfat input-xlarge">
+						</div>
+					</div>
+					<div class="control-group">
+						<label  class="control-label">邮箱：</label>
+						<div class="controls">
+							<input type="text" name="email" th:value="${tbUserVO.email}" placeholder="邮箱" class="input-xfat input-xlarge">
+						</div>
+					</div>
+					<div class="control-group">
+						<label  class="control-label">昵称：</label>
+						<div class="controls">
+							<input type="text" name="nickName" th:value="${tbUserVO.nickName}" placeholder="昵称" class="input-xfat input-xlarge">
+						</div>
+					</div>
+					<div class="control-group">
+						<label  class="control-label">真实姓名：</label>
+						<div class="controls">
+							<input type="text" name="name" th:value="${tbUserVO.name}" placeholder="真实姓名" class="input-xfat input-xlarge">
+						</div>
+					</div>
+					<div class="control-group">
+						<label  class="control-label">性别：</label>
+						<div class="controls">
+							<input type="radio" name="sex" value="1" checked>男
+							<input type="radio" name="sex" value="2">女
+						</div>
+					</div>
+					<div class="control-group">
+						<label  class="control-label">生日：</label>
+						<div class="controls">
+							<input type="date"  name="birthday" th:value="${#dates.format(tbUserVO.birthday,'yyyy-MM-dd')}"  placeholder="生日" class="input-xfat input-xlarge">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label"></label>
+						<div class="controls btn-reg">
+							<button onclick="update()" type="button" class="sui-btn btn-block btn-xlarge btn-danger" >保存</button>
+						</div>
+					</div>
+				</form>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+		<!--foot-->
+		<div class="py-container copyright">
+			<ul>
+				<li>关于我们</li>
+				<li>联系我们</li>
+				<li>联系客服</li>
+				<li>商家入驻</li>
+				<li>营销中心</li>
+				<li>手机东东商城</li>
+				<li>销售联盟</li>
+				<li>东东商城社区</li>
+			</ul>
+			<div class="address">地址：北京市昌平区沙阳路18号 邮编：100000 电话：400-0123-302</div>
+			<div class="beian">京ICP备08006666号京公网安备11010888888
+			</div>
+		</div>
+	</div>
+
+
+<script type="text/javascript" src="/js/plugins/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/jquery.easing/jquery.easing.min.js"></script>
+<script type="text/javascript" src="/js/plugins/sui/sui.min.js"></script>
+<script type="text/javascript" src="/js/plugins/jquery-placeholder/jquery.placeholder.min.js"></script>
+<script type="text/javascript" src="/js/pages/register.js"></script>
+</body>
+<script>
+	var key = localStorage.getItem("token")//根据key获取数据
+	var user = localStorage.getItem("user")//根据key获取数据
+	var s = JSON.stringify(user);
+
+ 	function update(){
+		$.ajax({
+			url:"/user/update",
+			data:$("#update").serialize(),
+			dataType:"json",
+			type:"get",
+			async: "true",
+			success:function (result){
+				if(result.code == 200){
+					alert("ok")
+					window.location.href="javascript:history.go(-1)";
+					// location.href="/toIndex?key="+key+"&s="+s;
+				}else{
+					alert("no")
+				}
+			},
+			error:function (result){
+				alert("网络异常")
+			}
+		})
+	}
+</script>
+</html>

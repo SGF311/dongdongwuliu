@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!-- bootstrap-fileinput -->
+    <script type="text/javascript" src="/js/js/bootstrap-fileinput/js/fileinput.js"></script>
+    <link rel="stylesheet" type="text/css" href="/js/js/bootstrap-fileinput/css/fileinput.css">
+    <script type="text/javascript" src="/js/js/bootstrap-fileinput/js/locales/zh.js"></script>
+</head>
+<body>
+<form id="addForm">
+    <table border="1" width="100%">
+        <tr>
+            <td>标题</td>
+            <td>
+                <input type="text" name="title">
+            </td>
+        </tr>
+
+        <tr>
+            <td>图片</td>
+            <td>
+                <input type="file" id="myFile" name="myFile" multiple/>
+                <input type="text" name="smallPic" id="fileName" >
+            </td>
+        </tr>
+
+        <tr>
+            <td>优惠券面额</td>
+            <td>
+                <input type="text" name="price">
+            </td>
+        </tr>
+
+        <tr>
+            <td>开始时间</td>
+            <td>
+                <input type="date" name="startTime">
+            </td>
+        </tr>
+        <tr>
+            <td>结束时间</td>
+            <td>
+                <input type="date" name="endTime" >
+            </td>
+        </tr>
+        <tr>
+            <td>秒杀商品数</td>
+            <td>
+                <input type="text" name="num" >
+            </td>
+        </tr>
+        <tr>
+            <td>剩余库存数</td>
+            <td>
+                <input type="text" name="stockCount" >
+            </td>
+        </tr>
+        <tr>
+            <td>优惠券类型</td>
+            <td>
+                <input type="radio" checked="checked" name="type" value="0">无门槛
+                <input type="radio" name="type" value="1">满减卷
+            </td>
+        </tr>
+        <tr>
+            <td>优惠券开始时间</td>
+            <td>
+                <input type="date" name="seckillStartTime" >
+            </td>
+        </tr><tr>
+            <td>优惠券结束时间</td>
+            <td>
+                <input type="date" name="seckillEndTime" >
+            </td>
+        </tr>
+
+        <tr>
+            <td>满多少</td>
+            <td>
+                <input type="text" name="sumPrice" >
+            </td>
+        </tr><tr>
+            <td>减多少</td>
+            <td>
+                <input type="text" name="losePrice" >
+            </td>
+        </tr><tr>
+            <td>描述</td>
+            <td>
+                <input type="text" name="introduction" >
+            </td>
+        </tr>
+    </table>
+</form>
+
+
+<script>
+    $(function(){
+        $("#myFile").fileinput({
+            language: 'zh',
+            uploadUrl: '/file/upload',
+            allowedFileExtensions : ['png','jpg','gif','txt'],
+            maxFileSize : 2048,
+            maxFileCount : 5,
+            enctype : "multipart/form-data",
+            browseClass: 'btn btn-primary'
+        });
+        $("#myFile").on('fileuploaded',function (event,data,prevewId,index){
+            $("#fileName").val(data.response.data);
+
+        })
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="contentCategoryUpdateForm">
+    <table class="table table-bordered table-striped"  width="800px">
+        <tr>
+
+            <td>广告内容</td>
+            <td>
+                <input type="hidden" name="id" th:value="${tbContentCategoryVO.id}">
+                <input  class="form-control" placeholder="内容名字"  name="name" th:value="${tbContentCategoryVO.name}">
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>
